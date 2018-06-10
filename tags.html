@@ -13,7 +13,7 @@
         <link rel="alternate" type="application/atom+xml" title="Nat Busa blog atom feed" href="/feeds/all.atom.xml" />
         <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700' rel='stylesheet' type='text/css'>
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="/theme/css/icons.css"/>
         <style>.highlight .hll { background-color: #ffffcc }
 .highlight .c { color: #60a0b0; font-style: italic } /* Comment */
@@ -93,19 +93,16 @@ a:hover {
   color: #007EE5;
   text-decoration: none;
 }
-header.main-header {
-  background: none repeat scroll 0% 0% #205F29;
-  margin-bottom: 0px;
+/* header.navbar {
+  background: none repeat scroll 0% 0% #FFF;
+  border-bottom: 1px solid #ddd;
 }
-header.main-header a {
-  color: #fff;
+body.navbar a {
+  color: #555;
 }
-header.main-header .container {
-  max-width: 1000px;
-}
-header.main-header .container nav a:hover {
-  background-color: #5C881C;
-}
+body.navbar a:hover {
+  background-color: #FFF;
+} */
 article {
   margin: 0;
 }
@@ -377,8 +374,9 @@ article .meta a.comments_btn:hover {
   padding-left: 0px;
 }</style>
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 
         <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
         <script type="text/javascript">
@@ -404,32 +402,27 @@ article .meta a.comments_btn:hover {
     </head>
 
     <body>
-        <header class="navbar navbar-inverse bs-docs-nav">
-            <div class="container-fluid">
-                <div class="navbar-header">
-		  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#theNavbar">
-		    <span class="icon-bar"></span>
-		    <span class="icon-bar"></span>
-		    <span class="icon-bar"></span> 
-		  </button>
-                  <a class="navbar-brand" href="/" title="Home" class="title">Nat Busa</a>
-                </div>
-                <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation" id="theNavbar">
-		    <ul class="nav navbar-nav navbar-right">
-                            <li><a href="/pages/about.html" title="About">About</a></li>
-                            <li><a href="/archives.html" title="Archive">Archive</a></li>
-                            <li><a class="nodec icon-rss" href="/feeds/all.atom.xml" title="jakevdp.github.io RSS feed" rel="me"></a></li>
-                    </ul>
-                </nav>
-            </div>
-        </header>
+
+      <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+        <a class="navbar-brand" href="#">Nat Busa</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+                <li class="nav-item"><a class="nav-link" href="/pages/about.html" title="About">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="/archives.html" title="Archive">Archive</a></li>
+            <li class="nav-item"><a class="nav-link" href="https://linkedin/in/natbusa">Linkedin</a></li>
+          </ul>
+          <span class="navbar-text">
+    </span>
+        </div>
+      </nav>
 
         <div id="wrap">
-    <h1>Tags for Nat Busa</h1>        <li><a href="http://natbusa.github.io/tag/animation.html">animation</a> (1)</li>
-        <li><a href="http://natbusa.github.io/tag/blogging.html">blogging</a> (1)</li>
-        <li><a href="http://natbusa.github.io/tag/octopress.html">octopress</a> (1)</li>
+    <h1>Tags for Nat Busa</h1>        <li><a href="http://natbusa.github.io/tag/business.html">business</a> (1)</li>
         <li><a href="http://natbusa.github.io/tag/pelican.html">pelican</a> (1)</li>
-        <li><a href="http://natbusa.github.io/tag/simulation.html">simulation</a> (1)</li>
+        <li><a href="http://natbusa.github.io/tag/science.html">science</a> (1)</li>
         </div>
 <!--
     <footer>
