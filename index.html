@@ -1,554 +1,1891 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="author" content="Natalino Busa">
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
-        <title>Home | Natalino Busa</title>
+<html lang="en-us">
 
-	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-	<link rel="icon" href="/favicon.ico" type="image/x-icon">
-        <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700' rel='stylesheet' type='text/css'>
+<head>
 
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
-        <style>.highlight .hll { background-color: #ffffcc }
-.highlight .c { color: #60a0b0; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #007020; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .cm { color: #60a0b0; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #007020 } /* Comment.Preproc */
-.highlight .c1 { color: #60a0b0; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #60a0b0; background-color: #fff0f0 } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .gr { color: #FF0000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #00A000 } /* Generic.Inserted */
-.highlight .go { color: #808080 } /* Generic.Output */
-.highlight .gp { color: #c65d09; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0040D0 } /* Generic.Traceback */
-.highlight .kc { color: #007020; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #007020; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #007020; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #007020 } /* Keyword.Pseudo */
-.highlight .kr { color: #007020; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #902000 } /* Keyword.Type */
-.highlight .m { color: #40a070 } /* Literal.Number */
-.highlight .s { color: #4070a0 } /* Literal.String */
-.highlight .na { color: #4070a0 } /* Name.Attribute */
-.highlight .nb { color: #007020 } /* Name.Builtin */
-.highlight .nc { color: #0e84b5; font-weight: bold } /* Name.Class */
-.highlight .no { color: #60add5 } /* Name.Constant */
-.highlight .nd { color: #555555; font-weight: bold } /* Name.Decorator */
-.highlight .ni { color: #d55537; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #007020 } /* Name.Exception */
-.highlight .nf { color: #06287e } /* Name.Function */
-.highlight .nl { color: #002070; font-weight: bold } /* Name.Label */
-.highlight .nn { color: #0e84b5; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #062873; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #bb60d5 } /* Name.Variable */
-.highlight .ow { color: #007020; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mf { color: #40a070 } /* Literal.Number.Float */
-.highlight .mh { color: #40a070 } /* Literal.Number.Hex */
-.highlight .mi { color: #40a070 } /* Literal.Number.Integer */
-.highlight .mo { color: #40a070 } /* Literal.Number.Oct */
-.highlight .sb { color: #4070a0 } /* Literal.String.Backtick */
-.highlight .sc { color: #4070a0 } /* Literal.String.Char */
-.highlight .sd { color: #4070a0; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #4070a0 } /* Literal.String.Double */
-.highlight .se { color: #4070a0; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #4070a0 } /* Literal.String.Heredoc */
-.highlight .si { color: #70a0d0; font-style: italic } /* Literal.String.Interpol */
-.highlight .sx { color: #c65d09 } /* Literal.String.Other */
-.highlight .sr { color: #235388 } /* Literal.String.Regex */
-.highlight .s1 { color: #4070a0 } /* Literal.String.Single */
-.highlight .ss { color: #517918 } /* Literal.String.Symbol */
-.highlight .bp { color: #007020 } /* Name.Builtin.Pseudo */
-.highlight .vc { color: #bb60d5 } /* Name.Variable.Class */
-.highlight .vg { color: #bb60d5 } /* Name.Variable.Global */
-.highlight .vi { color: #bb60d5 } /* Name.Variable.Instance */
-.highlight .il { color: #40a070 } /* Literal.Number.Integer.Long */</style>
-        <style>body {
-  margin: 0;
-  padding: 0;
-  font: 15px 'Source Sans Pro', sans-serif;
-  line-height: 1.6em;
-  color: #222;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-}
-a {
-  color: #007EE5;
-  text-decoration: none;
-}
-a:hover {
-  color: #007EE5;
-  text-decoration: none;
-}
-article {
-  margin: 0;
-}
-article header.about {
-  margin-bottom: 0px;
-  padding-bottom: 0px;
-}
-article header {
-  margin-bottom: 20px;
-  padding-bottom: 20px;
-}
-article header h1 {
-  margin-bottom: 2px;
-  font-weight: 700;
-  color: #000;
-}
-article header time {
-  color: #9E9E9E;
-  font-size: 0.85em;
-  float: right;
-}
-article header time.left {
-  color: #9E9E9E;
-  font-size: 0.85em;
-  float: left;
-}
-article div.social-links ul {
-  padding: 0px;
-}
-article div.social-links li {
-  display: inline;
-  font-size: 20px;
-}
-article div.social-links li a {
-  color: #000;
-  padding: 10px;
-}
-article div.social-links li a:hover {
-  color: #666;
-  text-decoration: none;
-}
-article p {
-  font-size: 16px;
-  margin-bottom: 20px;
-  line-height: 1.6em;
-}
-article p.note {
-  background: #f5f5f5;
-  border: 1px solid #ddd;
-  padding: 0.533em 0.733em;
-}
-article p.update {
-  background-color: #FEEFB3;
-  border: 1px solid #e6e68a;
-  padding: 0.533em 0.733em;
-}
-article p.alert {
-  background-color: #ffe2e2;
-  border: 1px solid #ffb2b2;
-  padding: 0.533em 0.733em;
-}
-article ul,
-article ol {
-  margin-top: 0px;
-  margin-bottom: 25px;
-}
-article li {
-  font-size: 16px;
-  line-height: 1.6em;
-}
-article a:hover {
-  text-decoration: underline;
-}
-article blockquote {
-  border-left: 2px solid #c7c7cc;
-  color: #666;
-  margin: 30px 0;
-  padding: 0 0 0 25px;
-}
-article img {
-  max-width: 100%;
-}
-article code {
-  color: #333;
-  background-color: #EEE;
-  border-radius: 0;
-  font-size: 13px;
-}
-article .meta {
-  font-size: 11px;
-}
-article .meta a:hover {
-  text-decoration: none;
-}
-article .meta div {
-  margin-bottom: 20px;
-  display: block;
-}
-article .meta a.tag {
-  margin: 0 10px 10px 0;
-  padding: 1px 12px;
-  display: inline-block;
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.8);
-  background: rgba(0, 0, 0, 0.05);
-}
-article .meta a.tag:hover {
-  background: rgba(0, 0, 0, 0.15);
-}
-article .meta a.read_more,
-article .meta a.comments_btn {
-  font-size: 14px;
-  font-weight: 800;
-  padding: 10px 20px;
-  color: #205F29;
-  background: #FFF;
-  border: 1px solid #205F29;
-}
-article .meta a.read_more:hover,
-article .meta a.comments_btn:hover {
-  color: #FFF;
-  background: #5C881C;
-}
-.index {
-  max-width: 700px;
-}
-.index article header h2 {
-  font-size: 36px;
-  margin-bottom: 2px;
-  font-weight: 700;
-}
-.index article header h2 a {
-  color: #000;
-}
-.index article header h2 a:hover {
-  color: #007EE5;
-  text-decoration: none;
-}
-.index .separator {
-  padding: 40px 0 0 0;
-  margin: 0 0 40px 0;
-  height: 10px;
-  border-bottom: solid 1px #CCC;
-}
-.index .pagination {
-  display: block;
-  margin-bottom: 100px;
-}
-.index .pagination .left {
-  text-align: right;
-}
-.index .pagination .right {
-  text-align: left;
-}
-.index .pagination a {
-  display: inline-block;
-  border: 2px solid #5C881C;
-  margin: 0 5px;
-  padding: 8px 20px;
-  font-weight: bold;
-  color: #5C881C;
-}
-.index .pagination a:hover {
-  color: #FFF;
-  background: #5C881C;
-}
-.post {
-  max-width: 700px;
-}
-.post h2:before {
-  content: "# ";
-  font-weight: bold;
-  color: #DDD;
-}
-.post h3:before {
-  content: "## ";
-  font-weight: bold;
-  color: #DDD;
-}
-.post h4:before {
-  content: "### ";
-  font-weight: bold;
-  color: #DDD;
-}
-.post article .meta {
-  margin: 50px 0 100px;
-}
-.list {
-  max-width: 700px;
-}
-.list ul.double-list {
-  margin: 0 auto 60px;
-  padding: 0;
-  list-style-type: none;
-}
-.list ul.double-list li {
-  padding: 5px 0;
-}
-.list ul.double-list li h2 {
-  font-size: 1em;
-  display: inline;
-  font-weight: normal;
-}
-.list ul.double-list li span {
-  font-family: sans-serif;
-  text-transform: uppercase;
-  text-align: right;
-  float: right;
-  padding-top: 3px;
-  font-size: 12px;
-  color: #999;
-}
-.full-width-content {
-  padding-top: 10px;
-  padding-left: 0px;
-  padding-right: 0px;
-  margin-left: -20px;
-  margin-right: -20px;
-}
-.col-xs-1,
-.col-sm-1,
-.col-md-1,
-.col-lg-1,
-.col-xs-2,
-.col-sm-2,
-.col-md-2,
-.col-lg-2,
-.col-xs-3,
-.col-sm-3,
-.col-md-3,
-.col-lg-3,
-.col-xs-4,
-.col-sm-4,
-.col-md-4,
-.col-lg-4,
-.col-xs-5,
-.col-sm-5,
-.col-md-5,
-.col-lg-5,
-.col-xs-6,
-.col-sm-6,
-.col-md-6,
-.col-lg-6,
-.col-xs-7,
-.col-sm-7,
-.col-md-7,
-.col-lg-7,
-.col-xs-8,
-.col-sm-8,
-.col-md-8,
-.col-lg-8,
-.col-xs-9,
-.col-sm-9,
-.col-md-9,
-.col-lg-9,
-.col-xs-10,
-.col-sm-10,
-.col-md-10,
-.col-lg-10,
-.col-xs-11,
-.col-sm-11,
-.col-md-11,
-.col-lg-11,
-.col-xs-12,
-.col-sm-12,
-.col-md-12,
-.col-lg-12 {
-  padding-right: 0px;
-  padding-left: 0px;
-}</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.5.0">
 
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
-        <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/all.js" integrity="sha384-xymdQtn1n3lH2wcu0qhcdaOpQwyoarkgLVxC/wZ5q7h9gHtxICrpcaSUfygqZGOe" crossorigin="anonymous"></script>
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Nelson Bighetti">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Professor of Artificial Intelligence">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/">
+
+  
 
 
-        <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
-        <script type="text/javascript">
-        init_mathjax = function() {
-            if (window.MathJax) {
-                // MathJax loaded
-                MathJax.Hub.Config({
-                    tex2jax: {
-                        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-                        displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
-                    },
-                    displayAlign: 'left', // Change this to 'center' to center equations.
-                    "HTML-CSS": {
-                        styles: {'.MathJax_Display': {"margin": 0}}
-                    }
-                });
-                MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
-            }
-        }
-        init_mathjax();
-        </script>
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
 
-    </head>
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
 
-    <body>
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
 
-      <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom mb-3">
-        <a class="navbar-brand" href="/">Natalino Busa</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
-                <li class="nav-item"><a class="nav-link" href="/pages/about.html" title="About">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="/archives.html" title="Archive">Archive</a></li>
-            <li class="nav-item"><a class="nav-link" href="https://linkedin/in/natbusa">Linkedin</a></li>
-          </ul>
-          <span class="navbar-text">
-    </span>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700%7CRoboto:400,400italic,700%7CRoboto+Mono&display=swap">
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+  
+
+
+  
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Academic">
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon-32.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/">
+
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="og:site_name" content="Academic">
+  <meta property="og:url" content="/">
+  <meta property="og:title" content="Academic">
+  <meta property="og:description" content="Professor of Artificial Intelligence"><meta property="og:image" content="/img/icon-192.png">
+  <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+    
+  
+
+  
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "/?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "url": "/"
+}
+</script>
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Academic</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#navbar-main" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
         </div>
-      </nav>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
 
-        <div id="wrap">
-<div class="container index">
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search">
+        
+      </div>
 
-  <article>
-    <header>
-      <h2><a href="http://natbusa.github.io/blog/2017/12/18/simulating-chutes-and-ladders/">Simulating Chutes & Ladders in Python</a></h2>
-      <time datetime="" title="2017-12-18T10:00:00+08:00" pubdate>Mon 18 December 2017</time>
-    </header>
+    </section>
+    <section class="section-search-results">
 
-    <div class="article_content">
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0 compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Academic</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
       
 
-<p><img src="http://jakevdp.github.io/images/ChutesAndLadders-sim.gif" alt='[img: Chutes and Ladders animated simulation]'></p>
-<p>This weekend I found myself in a particularly drawn-out game of Chutes and Ladders with my four-year-old. If you've not had the pleasure of playing it, Chutes and Ladders (also sometimes known as <a href="https://en.wikipedia.org/wiki/Snakes_and_Ladders">Snakes and Ladders</a>) is a classic kids board game wherein players roll a six-sided die to advance forward through 100 squares, using "ladders" to jump ahead, and avoiding "chutes" that send you backward. It's basically a glorified random walk with visual aids to help you build a narrative. Thrilling. But she's having fun practicing counting, learning to win and lose gracefully, and developing the requisite skills to be a <a href="https://xkcd.com/904/">passionate sports fan</a>, so I play along.</p>
-<p>On the approximately twenty third game of the morning, as we found ourselves in a near endless cycle of climbing ladders and sliding down chutes, never quite reaching that final square to end the game, I started wondering how much longer the game could last: what is the expected length of a game? How heavy are the tails of the game length distribution? How succinctly could I answer those questions in Python? And then, at some point, it <a href="https://twitter.com/jakevdp/status/942456865580924928">clicked</a>: Chutes and Ladders is memoryless — the effect of a roll depends only on where you are, not where you've been — and so it can be modeled as a Markov process! By the time we (finally) hit square 100, I basically had this blog post written, at least in my head.</p>
-<p>When I <a href="https://twitter.com/jakevdp/status/942456865580924928">tweeted about this</a>, people pointed me to a <a href="http://www.datagenetics.com/blog/november12011/">number</a> of <a href="https://gist.github.com/CamDavidsonPilon/1639d06c448904afaf7b7449910f3b72">similar</a> <a href="https://math.byu.edu/~jeffh/mathematics/games/chutes/chutes.html">treatments</a> of <a href="https://roycoding.github.io/chutes-ladders-d3/">Chutes</a> &amp; <a href="https://scipython.com/book/chapter-6-numpy/additional-problems/analysing-snakes-and-ladders-as-a-markov-chain/">Ladders</a>, so I'm under no illusion that this idea is original.
-Think of this as a blog post version of a dad joke: my primary goal is not originality, but self-entertainment, and if anyone else finds it entertaining that's just an added bonus.</p>
+    
+    <div class="collapse navbar-collapse" id="navbar">
 
-    </div>
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
 
-    <div class="meta">
-      <div>
-        <a href="http://natbusa.github.io/blog/2017/12/18/simulating-chutes-and-ladders/" class="read_more">Read more &#8594;</a>
-      </div>
+        
 
-      <div>
-            <a href="http://natbusa.github.io/tag/science.html" class="tag">science</a>
-      </div>
+        
+        
+        
+          
+        
 
-    </div>
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
 
-  </article>
-  <div class="separator"></div>
-  <article>
-    <header>
-      <h2><a href="http://natbusa.github.io/blog/2017/02/07/ai-scene-in-the-valley/">The AI scene in the valley: a trip report</a></h2>
-      <time datetime="" title="2017-02-07T14:58:00+08:00" pubdate>Tue 07 February 2017</time>
-    </header>
+        <li class="nav-item">
+          <a class="nav-link " href="/#about" data-target="#about"><span>Home</span></a>
+        </li>
 
-    <div class="article_content">
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts" data-target="#posts"><span>Posts</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#projects" data-target="#projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#featured" data-target="#featured"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#contact" data-target="#contact"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+      
+      </ul>
+      <ul class="navbar-nav ml-auto">
       
 
-<p>A few weeks back I was lucky enough to attend and present at the Global AI Summit in the bay area. This is my personal trip report about the people I have met and some of the projects and startups I came across.</p>
-<h2>AI is eating the world.</h2>
-<p>First of all, let me start by saying that literally <em>everybody</em> is doing (or claiming to do) AI in the bay area. AI has inflamed the spirits of pretty much every single software engineer, data scientist, business developer, talent scout, and VC in the greater San Francisco area.</p>
-<p>All tools and services presented at the conference embed some form of machine intelligence, and scientists are the new cool kids on the block. Software engineering has probably reached an all-time low in terms of coolness in the bay area, and regarded almost as the "necessary evil" in order to unleash the next AI interface. This is somewhat counter-intuitive, as actually Machine Learning and AI are more like the raisins in raisin bread, as Peter Norvig and Marcos Sponton say.
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+        </li>
+        
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+        </li>
+        
+
+      </ul>
 
     </div>
+  </div>
+</nav>
 
-    <div class="meta">
-      <div>
-        <a href="http://natbusa.github.io/blog/2017/02/07/ai-scene-in-the-valley/" class="read_more">Read more &#8594;</a>
-      </div>
 
-      <div>
-            <a href="http://natbusa.github.io/tag/business.html" class="tag">business</a>
-      </div>
+  
 
-    </div>
 
-  </article>
-  <div class="separator"></div>
-  <article>
-    <header>
-      <h2><a href="http://natbusa.github.io/blog/2013/05/07/migrating-from-octopress-to-pelican/">Migrating from Octopress to Pelican</a></h2>
-      <time datetime="" title="2013-05-07T17:00:00+08:00" pubdate>Tue 07 May 2013</time>
-    </header>
 
-    <div class="article_content">
+
+
+
+
+
+
+
+
+<span class="js-widget-page d-none"></span>
+
+
+
+
+  
+
+
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+    
+    
+  
+
+  
+
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+  <section id="demo" class="home-section wg-blank dark  " style="background-image: linear-gradient(DarkGreen, ForestGreen);padding: 20px 0 20px 0;" >
+    <div class="container">
       
 
-<p>After nine months on Octopress, I've decided to move on.</p>
-<p>I should start by saying that Octopress is a great platform for static
-blogging: it's powerful, flexible, well-supported, well-integrated with
-GitHub pages, and has tools and plugins to do just about anything you might
-imagine.  There's only one problem:</p>
-<p>It's written in <em>Ruby</em>.</p>
-<p>Now I don't have anything against Ruby per se.  However, it was starting to
-seem a bit awkward that a blog called <em>Pythonic Perambulations</em>
-was built with Ruby, especially given the availability of so many
-excellent Python-based static site generators
-(<a href="http://hyde.github.io/">Hyde</a>,
-<a href="http://nikola.ralsina.com.ar/">Nikola</a>,
-and <a href="http://getpelican.com">Pelican</a> in particular).</p>
-<p>Additionally, a few things with Octopress were starting to become difficult:
 
-    </div>
+<div class="row">
+  
+    <div class="col-lg-12">
+      <h1>Academic Kickstart</h1>
+      
+      <p>Welcome to the <strong>Academic Kickstart</strong> template!</p>
 
-    <div class="meta">
-      <div>
-        <a href="http://natbusa.github.io/blog/2013/05/07/migrating-from-octopress-to-pelican/" class="read_more">Read more &#8594;</a>
-      </div>
+<p>Follow our <a href="https://sourcethemes.com/academic/docs/get-started/" target="_blank">Getting Started</a> and <a href="https://sourcethemes.com/academic/docs/widgets/" target="_blank">Page Builder</a> guides to easily personalize the template and then <a href="https://sourcethemes.com/academic/docs/managing-content/" target="_blank">add your own content</a>.</p>
 
-      <div>
-            <a href="http://natbusa.github.io/tag/pelican.html" class="tag">pelican</a>
-      </div>
+<p>For inspiration, check out <a href="https://sourcethemes.com/academic/docs/install/#demo-content" target="_blank">the Markdown files</a> which power the <a href="https://academic-demo.netlify.com/" target="_blank">personal demo</a>. The easiest way to publish your new site to the internet is with <a href="https://sourcethemes.com/academic/docs/deployment/" target="_blank">Netlify</a>.</p>
 
-    </div>
+<ul>
+<li><a href="https://sourcethemes.com/academic/docs/" target="_blank">View the documentation</a></li>
+<li><a href="http://discuss.gohugo.io/" target="_blank">Ask a question</a></li>
+<li><a href="https://github.com/gcushen/hugo-academic/issues" target="_blank">Request a feature or report a bug</a></li>
+<li>Updating? View the <a href="https://sourcethemes.com/academic/docs/update/" target="_blank">Update Guide</a> and <a href="https://sourcethemes.com/academic/updates/" target="_blank">Release Notes</a></li>
+<li>Support development of Academic:
 
-  </article>
-  <div class="separator"></div>
+<ul>
+<li><a href="https://paypal.me/cushen" target="_blank">Donate a coffee</a></li>
+<li><a href="https://www.patreon.com/cushen" target="_blank">Become a backer on Patreon</a></li>
+<li><a href="https://www.redbubble.com/people/neutreno/works/34387919-academic" target="_blank">Decorate your laptop or journal with an Academic sticker</a></li>
+<li><a href="https://academic.threadless.com/" target="_blank">Wear the T-shirt</a></li>
+</ul></li>
+</ul>
 
-  <nav class="pagination row">
-    <div class="col-xs-6 left">
-    </div>
-    <div class="col-xs-6 right">
-    </div>
-  </nav>
+<div class="alert alert-note">
+  <div>
+    <p>This homepage section is an example of adding <a href="https://sourcethemes.com/academic/docs/writing-markdown-latex/" target="_blank">elements</a> to the <a href="https://sourcethemes.com/academic/docs/widgets/" target="_blank"><em>Blank</em> widget</a>.</p>
+
+<p>Backgrounds can be applied to any section. Here, the <em>background</em> option is set give a <em>color gradient</em>.</p>
+
+<p><strong>To remove this section, delete <code>content/home/demo.md</code>.</strong></p>
 
   </div>
-
 </div>
 
+    </div>
+  
+</div>
+
+    </div>
+  </section>
+
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+  <section id="about" class="home-section wg-about   "  >
+    <div class="container">
+      
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+<div class="row">
+  <div class="col-12 col-lg-4">
+    <div id="profile">
+
+      
+      
+      <img class="portrait" src="/authors/admin/avatar_hu52a603635ecebd45650b162dadabb4e5_12861_250x250_fill_q90_lanczos_center.jpg" alt="Avatar">
+      
+
+      <div class="portrait-title">
+        <h2>Nelson Bighetti</h2>
+        <h3>Professor of Artificial Intelligence</h3>
+
+        
+        <h3>
+          
+          <span>Stanford University</span>
+          
+        </h3>
+        
+      </div>
+
+      <ul class="network-icon" aria-hidden="true">
+        
+        
+        
+        
+          
+        
+        
+        
+        
+        
+          
+        
+        <li>
+          <a href="/#contact" >
+            <i class="fas fa-envelope big-icon"></i>
+          </a>
+        </li>
+        
+        
+        
+        
+          
+        
+        
+        
+        
+        
+          
+        
+        <li>
+          <a href="https://twitter.com/GeorgeCushen" target="_blank" rel="noopener">
+            <i class="fab fa-twitter big-icon"></i>
+          </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+          
+        
+        <li>
+          <a href="https://scholar.google.co.uk/citations?user=sIwtMXoAAAAJ" target="_blank" rel="noopener">
+            <i class="ai ai-google-scholar big-icon"></i>
+          </a>
+        </li>
+        
+        
+        
+        
+          
+        
+        
+        
+        
+        
+          
+        
+        <li>
+          <a href="https://github.com/gcushen" target="_blank" rel="noopener">
+            <i class="fab fa-github big-icon"></i>
+          </a>
+        </li>
+        
+      </ul>
+
+    </div>
+  </div>
+  <div class="col-12 col-lg-8">
+
+    
+    <h1>Biography</h1>
+
+    <p>Nelson Bighetti is a professor of artificial intelligence at the Stanford AI Lab. His research interests include distributed robotics, mobile computing and programmable matter. He leads the Robotic Neurobiology group, which develops self-reconfiguring robots, systems of self-organizing robots, and mobile sensor networks.</p>
+
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus vulputate.</p>
+
+
+    <div class="row">
+
+      
+      <div class="col-md-5">
+        <h3>Interests</h3>
+        <ul class="ul-interests">
+          
+          <li>Artificial Intelligence</li>
+          
+          <li>Computational Linguistics</li>
+          
+          <li>Information Retrieval</li>
+          
+        </ul>
+      </div>
+      
+
+      
+      <div class="col-md-7">
+        <h3>Education</h3>
+        <ul class="ul-edu fa-ul">
+          
+          <li>
+            <i class="fa-li fas fa-graduation-cap"></i>
+            <div class="description">
+              <p class="course">PhD in Artificial Intelligence, 2012</p>
+              <p class="institution">Stanford University</p>
+            </div>
+          </li>
+          
+          <li>
+            <i class="fa-li fas fa-graduation-cap"></i>
+            <div class="description">
+              <p class="course">MEng in Artificial Intelligence, 2009</p>
+              <p class="institution">Massachusetts Institute of Technology</p>
+            </div>
+          </li>
+          
+          <li>
+            <i class="fa-li fas fa-graduation-cap"></i>
+            <div class="description">
+              <p class="course">BSc in Artificial Intelligence, 2008</p>
+              <p class="institution">Massachusetts Institute of Technology</p>
+            </div>
+          </li>
+          
+        </ul>
+      </div>
+      
+
+    </div>
+  </div>
+</div>
+
+    </div>
+  </section>
+
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+  <section id="skills" class="home-section wg-featurette   "  >
+    <div class="container">
+      
+
+
+<div class="row featurette">
+  
+  <div class="col-md-12 section-heading">
+    <h1>Skills</h1>
+    
+  </div>
+  
+
+  
+
+  
+  
+  
+  
+    
+  
+  <div class="col-12 col-sm-4">
+    <div class="featurette-icon"><i class="fab fa-r-project"></i></div>
+    <h3>R</h3>
+    <p>90%</p>
+  </div>
+  
+  
+  
+  
+    
+  
+  <div class="col-12 col-sm-4">
+    <div class="featurette-icon"><i class="fas fa-chart-line"></i></div>
+    <h3>Statistics</h3>
+    <p>100%</p>
+  </div>
+  
+  
+  
+  
+    
+  
+  <div class="col-12 col-sm-4">
+    <div class="featurette-icon"><i class="fas fa-camera-retro"></i></div>
+    <h3>Photography</h3>
+    <p>10%</p>
+  </div>
+  
+</div>
+
+    </div>
+  </section>
+
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+  <section id="experience" class="home-section wg-experience   "  >
+    <div class="container">
+      
+
+
+
+<div class="row">
+  <div class="col-12 col-lg-4 section-heading">
+    <h1>Experience</h1>
+    
+  </div>
+  <div class="col-12 col-lg-8">
+    
+
+    
+    
+    
+    <div class="row experience">
+      
+      <div class="col-auto text-center flex-column d-none d-sm-flex">
+        <div class="row h-50">
+          <div class="col ">&nbsp;</div>
+          <div class="col">&nbsp;</div>
         </div>
-<!--
-    <footer>
-      <p>
-        © 2012-2017 Natalino Busa, license <a href="https://github.com/natbusa/natbusa.github.io-source/blob/master/LICENSE"> </a>
-        unless otherwise noted.
-        Generated by <a href= "http://docs.getpelican.com/">Pelican</a>.
-      </p>
-    </footer>
--->
-    <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-37465072-2']);
-    _gaq.push(['_trackPageview']);
-    (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
+        <div class="m-2">
+          <span class="badge badge-pill border exp-fill">&nbsp;</span>
+        </div>
+        <div class="row h-50">
+          <div class="col border-right">&nbsp;</div>
+          <div class="col">&nbsp;</div>
+        </div>
+      </div>
+      
+      <div class="col py-2">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title exp-title text-muted mt-0 mb-1">CEO</h4>
+            <h4 class="card-title exp-company text-muted my-0">GenCoin</h4>
+            <div class="text-muted exp-meta">
+              Jan 2017 –
+              
+                Present
+              
+              
+                <span class="middot-divider"></span>
+                <span>California</span>
+              
+            </div>
+            <div class="card-text">Responsibilities include:</p>
 
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+<ul>
+<li>Analysing</li>
+<li>Modelling</li>
+<li>Deploying
+<br /></li>
+</ul></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row experience">
+      
+      <div class="col-auto text-center flex-column d-none d-sm-flex">
+        <div class="row h-50">
+          <div class="col border-right">&nbsp;</div>
+          <div class="col">&nbsp;</div>
+        </div>
+        <div class="m-2">
+          <span class="badge badge-pill border ">&nbsp;</span>
+        </div>
+        <div class="row h-50">
+          <div class="col ">&nbsp;</div>
+          <div class="col">&nbsp;</div>
+        </div>
+      </div>
+      
+      <div class="col py-2">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title exp-title text-muted mt-0 mb-1">Professor</h4>
+            <h4 class="card-title exp-company text-muted my-0">University X</h4>
+            <div class="text-muted exp-meta">
+              Jan 2016 –
+              
+                Dec 2016
+              
+              
+                <span class="middot-divider"></span>
+                <span>California</span>
+              
+            </div>
+            <div class="card-text">Taught electronic engineering and researched semiconductor physics.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    
+  </div>
+</div>
 
-    ga('create', 'UA-37465072-2');
-    ga('send', 'pageview');
-</script>
-    </body>
+    </div>
+  </section>
+
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+  <section id="accomplishments" class="home-section wg-accomplishments   "  >
+    <div class="container">
+      
+
+
+
+<div class="row">
+  <div class="col-12 col-lg-4 section-heading">
+    <h1>Accomplish&shy;ments</h1>
+    
+  </div>
+  <div class="col-12 col-lg-8">
+    
+
+    
+    
+      <div class="card experience course">
+        <div class="card-body"><h4 class="card-title exp-title text-muted my-0">Neural Networks and Deep Learning</h4><div class="card-subtitle my-0 article-metadata"><a href="https://www.coursera.org" target="_blank" rel="noopener">Coursera</a><span class="middot-divider"></span>
+
+            Oct 2018
+            
+          </div>
+
+          
+
+          
+            <a class="card-link" href="https://www.coursera.org" target="_blank" rel="noopener">
+              See certificate
+            </a>
+          
+        </div>
+      </div>
+    
+      <div class="card experience course">
+        <div class="card-body"><a href="https://www.edx.org/professional-certificate/uc-berkeleyx-blockchain-fundamentals" target="_blank" rel="noopener"><h4 class="card-title exp-title text-muted my-0">Blockchain Fundamentals</h4></a><div class="card-subtitle my-0 article-metadata"><a href="https://www.edx.org" target="_blank" rel="noopener">edX</a><span class="middot-divider"></span>
+
+            Mar 2018
+            
+          </div>
+
+          
+            <div class="card-text">Formulated informed blockchain models, hypotheses, and use cases.</div>
+          
+
+          
+            <a class="card-link" href="https://www.edx.org" target="_blank" rel="noopener">
+              See certificate
+            </a>
+          
+        </div>
+      </div>
+    
+      <div class="card experience course">
+        <div class="card-body"><h4 class="card-title exp-title text-muted my-0">Object-Oriented Programming in R: S3 and R6 Course</h4><div class="card-subtitle my-0 article-metadata"><a href="https://www.datacamp.com" target="_blank" rel="noopener">DataCamp</a><span class="middot-divider"></span>
+
+            Jul 2017
+            
+            – Dec 2017
+            
+          </div>
+
+          
+
+          
+            <a class="card-link" href="https://www.datacamp.com" target="_blank" rel="noopener">
+              See certificate
+            </a>
+          
+        </div>
+      </div>
+    
+    
+  </div>
+</div>
+
+    </div>
+  </section>
+
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+  <section id="posts" class="home-section wg-pages   "  >
+    <div class="container">
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+<div class="row">
+  <div class="col-12 col-lg-4 section-heading">
+    <h1>Recent Posts</h1>
+    
+  </div>
+  <div class="col-12 col-lg-8">
+
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+    </div>
+  </section>
+
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+  <section id="projects" class="home-section wg-portfolio   "  >
+    <div class="container">
+      
+
+
+
+
+
+
+
+
+
+
+<div class="row">
+  <div class="col-xs-12 col-md-4 section-heading">
+
+    <h1>Projects</h1>
+    
+
+  </div>
+  <div class="col-xs-12 col-md-8">
+
+
+
+    
+
+    
+
+    <div class="isotope projects-container js-layout-masonry ">
+      
+    </div>
+
+  </div>
+</div>
+
+    </div>
+  </section>
+
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+  <section id="talks" class="home-section wg-pages   "  >
+    <div class="container">
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+<div class="row">
+  <div class="col-12 col-lg-4 section-heading">
+    <h1>Recent &amp; Upcoming Talks</h1>
+    
+  </div>
+  <div class="col-12 col-lg-8">
+
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+    </div>
+  </section>
+
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+  <section id="featured" class="home-section wg-featured   "  >
+    <div class="container">
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="row">
+  <div class="col-12 col-lg-4 section-heading">
+    <h1>Featured Publications</h1>
+    
+  </div>
+  <div class="col-12 col-lg-8">
+
+    
+
+    
+
+  </div>
+</div>
+
+    </div>
+  </section>
+
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+  <section id="publications" class="home-section wg-pages   "  >
+    <div class="container">
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+<div class="row">
+  <div class="col-12 col-lg-4 section-heading">
+    <h1>Recent Publications</h1>
+    
+  </div>
+  <div class="col-12 col-lg-8">
+
+    <div class="alert alert-note">
+  <div>
+    Quickly discover relevant content by <a href="/publication/">filtering publications</a>.
+  </div>
+</div>
+
+
+    
+
+    
+
+  </div>
+</div>
+
+    </div>
+  </section>
+
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+  <section id="tags" class="home-section wg-tag-cloud   "  >
+    <div class="container">
+      
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+<div class="row">
+  <div class="col-12 col-lg-4 section-heading">
+    <h1>Popular Topics</h1>
+    
+  </div>
+  <div class="col-12 col-lg-8">
+    
+
+    
+
+  </div>
+</div>
+
+    </div>
+  </section>
+
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+  <section id="contact" class="home-section wg-contact   "  >
+    <div class="container">
+      
+
+
+
+
+
+<div class="row contact-widget">
+  <div class="col-12 col-lg-4 section-heading">
+    <h1>Contact</h1>
+    
+  </div>
+  <div class="col-12 col-lg-8">
+    
+
+    
+
+    
+    
+      
+      
+    
+
+    <div class="mb-3">
+      <form name="contact" method="POST" action="https://formspree.io/test@example.org">
+        <div class="form-group form-inline">
+          <label class="sr-only" for="inputName">Name</label>
+          <input type="text" name="name" class="form-control w-100" id="inputName" placeholder="Name" required>
+        </div>
+        <div class="form-group form-inline">
+          <label class="sr-only" for="inputEmail">Email</label>
+          <input type="email" name="email" class="form-control w-100" id="inputEmail" placeholder="Email" required>
+        </div>
+        <div class="form-group">
+          <label class="sr-only" for="inputMessage">Message</label>
+          <textarea name="message" class="form-control" id="inputMessage" rows="5" placeholder="Message" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-outline-primary px-3 py-2">Send</button>
+      </form>
+    </div>
+    
+
+    <ul class="fa-ul">
+
+      
+
+      
+      <li>
+        <i class="fa-li fas fa-phone fa-2x" aria-hidden="true"></i>
+        <span id="person-telephone"><a href="tel:888%20888%2088%2088">888 888 88 88</a></span>
+      </li>
+      
+
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        <li>
+          <i class="fa-li fas fa-map-marker fa-2x" aria-hidden="true"></i>
+          <span id="person-address">450 Serra Mall, Stanford, CA, 94305, United States</span>
+        </li>
+      
+
+      
+      <li>
+        <i class="fa-li fas fa-compass fa-2x" aria-hidden="true"></i>
+        <span>Enter Building 1 and take the stairs to Office 200 on Floor 2</span>
+      </li>
+      
+
+      
+      <li>
+        <i class="fa-li fas fa-clock fa-2x" aria-hidden="true"></i>
+        <span>Monday 10:00 to 13:00<br>Wednesday 09:00 to 10:00</span>
+      </li>
+      
+
+      
+      <li>
+        <i class="fa-li fas fa-calendar-check fa-2x" aria-hidden="true"></i>
+        <a href="https://calendly.com" target="_blank" rel="noopener">Book an appointment</a>
+      </li>
+      
+
+      
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <i class="fa-li fab fa-twitter fa-2x" aria-hidden="true"></i>
+        <a href="https://twitter.com/Twitter" target="_blank" rel="noopener">DM Me</a>
+      </li>
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+      <li>
+        <i class="fa-li fab fa-skype fa-2x" aria-hidden="true"></i>
+        <a href="skype:echo123?call" >Skype Me</a>
+      </li>
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <i class="fa-li fab fa-keybase fa-2x" aria-hidden="true"></i>
+        <a href="https://keybase.io/" target="_blank" rel="noopener">Chat on Keybase</a>
+      </li>
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <i class="fa-li fas fa-comments fa-2x" aria-hidden="true"></i>
+        <a href="https://discourse.gohugo.io" target="_blank" rel="noopener">Discuss on Forum</a>
+      </li>
+      
+
+    </ul>
+
+    
+    <div class="d-none">
+      <input id="map-provider" value="2">
+      <input id="map-lat" value="37.4275">
+      <input id="map-lng" value="-122.1697">
+      <input id="map-dir" value="450 Serra Mall, Stanford, CA, 94305, United States">
+      <input id="map-zoom" value="15">
+      <input id="map-api-key" value="">
+    </div>
+    <div id="map"></div>
+    
+
+  </div>
+</div>
+
+    </div>
+  </section>
+
+
+
+      
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js" integrity="sha256-1zu+3BnLYV9LdiY85uXMzii3bdrkelyp37e0ZyTAQh0=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/languages/r.min.js"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.d6bd04fdad2ad213aa8111c5a3b72fc5.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" class="back-to-top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
 </html>
