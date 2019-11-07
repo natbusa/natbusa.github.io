@@ -1,9 +1,9 @@
 {
-  "name": "Academic",
-  "short_name": "Academic",
+  "name": "Natalino Busa",
+  "short_name": "Natalino Busa",
   "lang": "en-us",
-  "theme_color": "#2962ff",
-  "background_color": "#2962ff",
+  "theme_color": "#D70404",
+  "background_color": "#D70404",
   "icons": [{
     "src": "../img/icon-192.png",
     "sizes": "192x192",
