@@ -4,20 +4,107 @@
   
   <url>
     <loc>/authors/natbusa/</loc>
-    <lastmod>2019-11-07T16:38:14+08:00</lastmod>
+    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/datafaucet-aggregate/</loc>
+    <lastmod>2019-11-11T16:28:27+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/analytics/</loc>
+    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
   </url>
   
   <url>
     <loc>/authors/</loc>
+    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
   </url>
   
   <url>
     <loc>/categories/</loc>
+    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/datafaucet/</loc>
+    <lastmod>2019-11-11T16:28:27+08:00</lastmod>
   </url>
   
   <url>
     <loc>/</loc>
-    <lastmod>2019-03-17T20:39:18+00:00</lastmod>
+    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/pandas/</loc>
+    <lastmod>2019-11-11T16:28:27+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/pyspark/</loc>
+    <lastmod>2019-11-11T16:28:27+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/architectures/</loc>
+    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/meetups/</loc>
+    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/streaming/</loc>
+    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/streaming-analytics/</loc>
+    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/ai-trip/</loc>
+    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/ventures/</loc>
+    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/data-science/</loc>
+    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/data-science-qa/</loc>
+    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/projects/</loc>
+    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/rewind/</loc>
+    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/rewind-2016/</loc>
+    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
   </url>
   
   <url>
@@ -30,17 +117,13 @@
   </url>
   
   <url>
-    <loc>/publication/</loc>
-    <lastmod>2019-05-06T17:54:11+01:00</lastmod>
+    <loc>/project/</loc>
+    <lastmod>2019-12-21T17:08:35+08:00</lastmod>
   </url>
   
   <url>
     <loc>/talk/</loc>
     <lastmod>2019-05-06T17:54:11+01:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
   </url>
   
 </urlset>

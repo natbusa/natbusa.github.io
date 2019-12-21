@@ -5,12 +5,44 @@
     <link>/categories/</link>
       <atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
     <description>Categories</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>2019</copyright>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>2019</copyright><lastBuildDate>Mon, 11 Nov 2019 16:28:27 +0800</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Categories</title>
       <link>/categories/</link>
     </image>
+    
+    <item>
+      <title>datafaucet</title>
+      <link>/categories/datafaucet/</link>
+      <pubDate>Mon, 11 Nov 2019 16:28:27 +0800</pubDate>
+      <guid>/categories/datafaucet/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>architectures</title>
+      <link>/categories/architectures/</link>
+      <pubDate>Tue, 07 Feb 2017 16:28:27 +0800</pubDate>
+      <guid>/categories/architectures/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>meetups</title>
+      <link>/categories/meetups/</link>
+      <pubDate>Tue, 07 Feb 2017 16:28:27 +0800</pubDate>
+      <guid>/categories/meetups/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>rewind</title>
+      <link>/categories/rewind/</link>
+      <pubDate>Thu, 29 Dec 2016 00:00:00 +0000</pubDate>
+      <guid>/categories/rewind/</guid>
+      <description></description>
+    </item>
     
   </channel>
 </rss>

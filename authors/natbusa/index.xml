@@ -5,12 +5,1861 @@
     <link>/authors/natbusa/</link>
       <atom:link href="/authors/natbusa/index.xml" rel="self" type="application/rss+xml" />
     <description>Natalino Busa</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>2019</copyright>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>2019</copyright><lastBuildDate>Mon, 11 Nov 2019 16:28:27 +0800</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Natalino Busa</title>
       <link>/authors/natbusa/</link>
     </image>
+    
+    <item>
+      <title>Aggregating Dataframes</title>
+      <link>/post/datafaucet-aggregate/</link>
+      <pubDate>Mon, 11 Nov 2019 16:28:27 +0800</pubDate>
+      <guid>/post/datafaucet-aggregate/</guid>
+      <description>&lt;p&gt;Aggregations are an important step while processing dataframes and tabular data
+in general. And therefore, they should be as simple as possible to implement.
+Some notable data aggregation semantics are provided by pandas, spark and the SQL
+language.&lt;/p&gt;
+&lt;p&gt;When designing an aggregation API method, the following characteristics make in
+my opinion a good aggregation method.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;easily perform aggregation on a column or a set of columns&lt;/li&gt;
+&lt;li&gt;easily perform multiple aggregation functions on the same columns&lt;/li&gt;
+&lt;li&gt;selectively perform differently aggregations on different columns&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;As an nice to have to this list, it would be nice to apply aggregation functions
+by passing the function name as a string. A good aggregation method should allow
+all the above with minimal amount of code required.&lt;/p&gt;
+&lt;h2 id=&#34;getting-started&#34;&gt;Getting started&lt;/h2&gt;
+&lt;p&gt;Let&#39;s start spark using datafaucet.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import datafaucet as dfc
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+dfc.engine(&#39;spark&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;datafaucet.spark.engine.SparkEngine at 0x7fbdb66f2128&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+spark  = dfc.context()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;generating-data&#34;&gt;Generating Data&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;df = spark.range(100)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;df = (df
+    .cols.create(&#39;g&#39;).randint(0,3)
+    .cols.create(&#39;n&#39;).randchoice([&#39;Stacy&#39;, &#39;Sandra&#39;])
+    .cols.create(&#39;x&#39;).randint(0,100)
+    .cols.create(&#39;y&#39;).randint(0,100)
+)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;df.data.grid(5)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;id&lt;/th&gt;
+      &lt;th&gt;g&lt;/th&gt;
+      &lt;th&gt;n&lt;/th&gt;
+      &lt;th&gt;x&lt;/th&gt;
+      &lt;th&gt;y&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;91&lt;/td&gt;
+      &lt;td&gt;89&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;19&lt;/td&gt;
+      &lt;td&gt;57&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;34&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;35&lt;/td&gt;
+      &lt;td&gt;15&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;93&lt;/td&gt;
+      &lt;td&gt;90&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;h2 id=&#34;pandas&#34;&gt;Pandas&lt;/h2&gt;
+&lt;p&gt;Let&#39;s start by looking how Pandas does aggregations. Pandas is quite flexible on the points noted above and uses hierachical indexes on both columns and rows to store the aggregation names and the groupby values. Here below a simple aggregation and a more complex one with groupby and multiple aggregation functions.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;pf = df.data.collect()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;pf[[&#39;n&#39;, &#39;x&#39;, &#39;y&#39;]].agg([&#39;max&#39;])
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;n&lt;/th&gt;
+      &lt;th&gt;x&lt;/th&gt;
+      &lt;th&gt;y&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;max&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;agg = (pf[[&#39;g&#39;,&#39;n&#39;, &#39;x&#39;, &#39;y&#39;]]
+           .groupby([&#39;g&#39;, &#39;n&#39;])
+           .agg({
+               &#39;n&#39;: &#39;count&#39;,
+               &#39;x&#39;: [&#39;min&#39;, max],
+               &#39;y&#39;:[&#39;min&#39;, &#39;max&#39;]
+           }))
+agg
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead tr th {
+    text-align: left;
+}
+
+.dataframe thead tr:last-of-type th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;n&lt;/th&gt;
+      &lt;th colspan=&#34;2&#34; halign=&#34;left&#34;&gt;x&lt;/th&gt;
+      &lt;th colspan=&#34;2&#34; halign=&#34;left&#34;&gt;y&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;count&lt;/th&gt;
+      &lt;th&gt;min&lt;/th&gt;
+      &lt;th&gt;max&lt;/th&gt;
+      &lt;th&gt;min&lt;/th&gt;
+      &lt;th&gt;max&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;g&lt;/th&gt;
+      &lt;th&gt;n&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td rowspan=&#34;2&#34; valign=&#34;top&#34;&gt;0&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;9&lt;/td&gt;
+      &lt;td&gt;14&lt;/td&gt;
+      &lt;td&gt;75&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;21&lt;/td&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;96&lt;/td&gt;
+      &lt;td&gt;8&lt;/td&gt;
+      &lt;td&gt;92&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td rowspan=&#34;2&#34; valign=&#34;top&#34;&gt;1&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;20&lt;/td&gt;
+      &lt;td&gt;8&lt;/td&gt;
+      &lt;td&gt;91&lt;/td&gt;
+      &lt;td&gt;9&lt;/td&gt;
+      &lt;td&gt;91&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;18&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;89&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td rowspan=&#34;2&#34; valign=&#34;top&#34;&gt;2&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;12&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;20&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;96&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;h3 id=&#34;stacking&#34;&gt;Stacking&lt;/h3&gt;
+&lt;p&gt;In pandas, you can stack the multiple column index and move it to a column, as below. The choice of stacking or not after aggregation depends on wht you want to do later with the data. Next to the extra index, stacking also explicitely code NaN / Nulls for evry aggregation which is not shared by each column (in case of dict of aggregation functions.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;agg = pf[[&#39;g&#39;, &#39;x&#39;, &#39;y&#39;]].groupby([&#39;g&#39;]).agg([&#39;min&#39;, &#39;max&#39;, &#39;mean&#39;])
+agg = agg.stack(0)
+agg
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;max&lt;/th&gt;
+      &lt;th&gt;mean&lt;/th&gt;
+      &lt;th&gt;min&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;g&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td rowspan=&#34;2&#34; valign=&#34;top&#34;&gt;0&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;96&lt;/td&gt;
+      &lt;td&gt;50.966667&lt;/td&gt;
+      &lt;td&gt;10&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+      &lt;td&gt;47.133333&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td rowspan=&#34;2&#34; valign=&#34;top&#34;&gt;1&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;91&lt;/td&gt;
+      &lt;td&gt;45.026316&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;48.736842&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td rowspan=&#34;2&#34; valign=&#34;top&#34;&gt;2&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;58.750000&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+      &lt;td&gt;53.906250&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;h3 id=&#34;index-as-columns&#34;&gt;Index as columns&lt;/h3&gt;
+&lt;p&gt;Index in pandas is not the same as column data, but you can easily move from one to the other, as shown below, by combine the name information of the various index levels with the values of each level.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;agg.index.names
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;FrozenList([&#39;g&#39;, None])
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+agg.index.get_level_values(0)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;Int64Index([0, 0, 1, 1, 2, 2], dtype=&#39;int64&#39;, name=&#39;g&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The following script will iterate through all the levels and create a column with the name of the original index level otherwise will use &lt;code&gt;_&amp;lt;level#&amp;gt;&lt;/code&gt; if no name is available. Remember that pandas allows indexes to be nameless.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;levels = agg.index.names
+for (name, lvl) in zip(levels, range(len(levels))):
+    agg[name or f&#39;_{lvl}&#39;] = agg.index.get_level_values(lvl)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+agg.reset_index(inplace=True, drop=True)
+agg
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;max&lt;/th&gt;
+      &lt;th&gt;mean&lt;/th&gt;
+      &lt;th&gt;min&lt;/th&gt;
+      &lt;th&gt;g&lt;/th&gt;
+      &lt;th&gt;_1&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;96&lt;/td&gt;
+      &lt;td&gt;50.966667&lt;/td&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+      &lt;td&gt;47.133333&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;91&lt;/td&gt;
+      &lt;td&gt;45.026316&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;48.736842&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;58.750000&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;5&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+      &lt;td&gt;53.906250&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;h2 id=&#34;spark-python&#34;&gt;Spark (Python)&lt;/h2&gt;
+&lt;p&gt;Spark aggregation is a bit simpler, but definitely very flexible, so we can achieve the same result with a little more work in some cases. Here below a simple example and a more complex one, reproducing the same three cases as above.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;df.select(&#39;n&#39;, &#39;x&#39;, &#39;y&#39;).agg({&#39;n&#39;:&#39;max&#39;, &#39;x&#39;:&#39;max&#39;, &#39;y&#39;:&#39;max&#39;}).toPandas()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;max(x)&lt;/th&gt;
+      &lt;th&gt;max(y)&lt;/th&gt;
+      &lt;th&gt;max(n)&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;p&gt;Or with a little more work we can exactly reproduce the pandas case:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from pyspark.sql import functions as F
+
+df.select(&#39;n&#39;, &#39;x&#39;, &#39;y&#39;).agg(
+    F.lit(&#39;max&#39;).alias(&#39;_idx&#39;),
+    F.max(&#39;n&#39;).alias(&#39;n&#39;), 
+    F.max(&#39;x&#39;).alias(&#39;x&#39;), 
+    F.max(&#39;y&#39;).alias(&#39;y&#39;)).toPandas()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;_idx&lt;/th&gt;
+      &lt;th&gt;n&lt;/th&gt;
+      &lt;th&gt;x&lt;/th&gt;
+      &lt;th&gt;y&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;max&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;p&gt;More complicated aggregation cannot be called by string and must be provided by functions. Here below a way to reproduce groupby aggregation as in the second pandas example:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;(df
+    .select(&#39;g&#39;, &#39;n&#39;, &#39;x&#39;, &#39;y&#39;)
+    .groupby(&#39;g&#39;, &#39;n&#39;)
+    .agg(
+        F.count(&#39;n&#39;).alias(&#39;n_count&#39;),
+        F.min(&#39;x&#39;).alias(&#39;x_min&#39;),
+        F.max(&#39;x&#39;).alias(&#39;x_max&#39;),
+        F.min(&#39;y&#39;).alias(&#39;y_min&#39;),
+        F.max(&#39;y&#39;).alias(&#39;y_max&#39;)
+    )
+).toPandas()
+        
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;g&lt;/th&gt;
+      &lt;th&gt;n&lt;/th&gt;
+      &lt;th&gt;n_count&lt;/th&gt;
+      &lt;th&gt;x_min&lt;/th&gt;
+      &lt;th&gt;x_max&lt;/th&gt;
+      &lt;th&gt;y_min&lt;/th&gt;
+      &lt;th&gt;y_max&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;17&lt;/td&gt;
+      &lt;td&gt;96&lt;/td&gt;
+      &lt;td&gt;8&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;20&lt;/td&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;92&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;86&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;18&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;89&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;14&lt;/td&gt;
+      &lt;td&gt;29&lt;/td&gt;
+      &lt;td&gt;96&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;20&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;91&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;5&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;18&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;96&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;h3 id=&#34;stacking-1&#34;&gt;Stacking&lt;/h3&gt;
+&lt;p&gt;Stacking, as in pandas, can be used to expose the column name on a different index column, unfortunatel stack is currently available only in the SQL initerface and not very flexible as in the pandas counterpart (&lt;a href=&#34;https://spark.apache.org/docs/2.3.0/api/sql/#stack&#34;&gt;https://spark.apache.org/docs/2.3.0/api/sql/#stack&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;You could use pyspark &lt;code&gt;expr&lt;/code&gt; to call the SQL function as explained here (&lt;a href=&#34;https://stackoverflow.com/questions/42465568/unpivot-in-spark-sql-pyspark)&#34;&gt;https://stackoverflow.com/questions/42465568/unpivot-in-spark-sql-pyspark)&lt;/a&gt;. However, another way would be to union the various results as shown here below.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;agg = pf[[&#39;g&#39;, &#39;x&#39;, &#39;y&#39;]].groupby([&#39;g&#39;]).agg([&#39;min&#39;, &#39;max&#39;, &#39;mean&#39;])
+a
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from pyspark.sql import functions as F
+
+(df
+    .select(&#39;g&#39;, &#39;x&#39;)
+    .groupby(&#39;g&#39;)
+    .agg(
+        F.lit(&#39;x&#39;).alias(&#39;_idx&#39;),
+        F.min(&#39;x&#39;).alias(&#39;min&#39;),
+        F.max(&#39;x&#39;).alias(&#39;max&#39;),
+        F.mean(&#39;x&#39;).alias(&#39;mean&#39;)
+    )
+).union(
+df
+    .select(&#39;g&#39;, &#39;y&#39;)
+    .groupby(&#39;g&#39;)
+    .agg(
+        F.lit(&#39;y&#39;).alias(&#39;_idx&#39;),
+        F.min(&#39;y&#39;).alias(&#39;min&#39;),
+        F.max(&#39;y&#39;).alias(&#39;max&#39;),
+        F.mean(&#39;y&#39;).alias(&#39;mean&#39;)
+    )
+).toPandas()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;g&lt;/th&gt;
+      &lt;th&gt;_idx&lt;/th&gt;
+      &lt;th&gt;min&lt;/th&gt;
+      &lt;th&gt;max&lt;/th&gt;
+      &lt;th&gt;mean&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;91&lt;/td&gt;
+      &lt;td&gt;45.026316&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;58.750000&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;96&lt;/td&gt;
+      &lt;td&gt;50.966667&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;48.736842&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+      &lt;td&gt;53.906250&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;5&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+      &lt;td&gt;47.133333&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;h3 id=&#34;generatring-aggregating-code&#34;&gt;Generatring aggregating code&lt;/h3&gt;
+&lt;p&gt;The code above looks complicated, but is very regular, hence we can generate it! What we need is a to a list of lists for the aggregation functions as shown here below:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;dfs = []
+for c in [&#39;x&#39;,&#39;y&#39;]:
+    print(&#39; &#39;*2, f&#39;col: {c}&#39;)
+    aggs = []
+    for func in [F.min, F.max, F.mean]:
+        f = func(c).alias(func.__name__)
+        aggs.append(f)
+        print(&#39; &#39;*4, f&#39;func: {f}&#39;)
+        
+    dfs.append(df.select(&#39;g&#39;, c).groupby(&#39;g&#39;).agg(*aggs))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;   col: x
+     func: Column&amp;lt;b&#39;min(x) AS `min`&#39;&amp;gt;
+     func: Column&amp;lt;b&#39;max(x) AS `max`&#39;&amp;gt;
+     func: Column&amp;lt;b&#39;avg(x) AS `mean`&#39;&amp;gt;
+   col: y
+     func: Column&amp;lt;b&#39;min(y) AS `min`&#39;&amp;gt;
+     func: Column&amp;lt;b&#39;max(y) AS `max`&#39;&amp;gt;
+     func: Column&amp;lt;b&#39;avg(y) AS `mean`&#39;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The dataframes in this generator have all the same columns and can be reduced with union calls&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from functools import reduce
+
+reduce(lambda a,b: a.union(b), dfs).toPandas()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;g&lt;/th&gt;
+      &lt;th&gt;min&lt;/th&gt;
+      &lt;th&gt;max&lt;/th&gt;
+      &lt;th&gt;mean&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;91&lt;/td&gt;
+      &lt;td&gt;45.026316&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;58.750000&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;96&lt;/td&gt;
+      &lt;td&gt;50.966667&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;48.736842&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+      &lt;td&gt;53.906250&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;5&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+      &lt;td&gt;47.133333&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;h2 id=&#34;meet-datafaucet-agg&#34;&gt;Meet DataFaucet agg&lt;/h2&gt;
+&lt;p&gt;One of the goal of datafaucet is to simplify analytics, data wrangling and data
+discovery over a set of engine with an intuitive interface. So the sketched
+solution above is available, with a few extras. See below the examples&lt;/p&gt;
+&lt;p&gt;The code here below attempt to produce readable code, engine agnostic data
+aggregations. The aggregation api is always in the form:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;df.cols.get(...).groupby(...).agg(...)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Alternativaly, you can &lt;code&gt;find&lt;/code&gt; instead of &lt;code&gt;get&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+d = df.cols.get(&#39;x&#39;).agg(&#39;distinct&#39;)
+d.data.grid()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;x&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;64&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+d = df.cols.get(&#39;x&#39;).agg([&#39;distinct&#39;, &#39;avg&#39;])
+d.data.grid()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;x_distinct&lt;/th&gt;
+      &lt;th&gt;x_avg&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;64&lt;/td&gt;
+      &lt;td&gt;51.2&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+d = df.cols.get(&#39;x&#39;).agg([&#39;distinct&#39;, &#39;avg&#39;], stack=True)
+d.data.grid()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;_idx&lt;/th&gt;
+      &lt;th&gt;distinct&lt;/th&gt;
+      &lt;th&gt;avg&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;64&lt;/td&gt;
+      &lt;td&gt;51.2&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+d = df.cols.get(&#39;x&#39;).agg([&#39;distinct&#39;, &#39;avg&#39;], stack=&#39;colname&#39;)
+d.data.grid()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;colname&lt;/th&gt;
+      &lt;th&gt;distinct&lt;/th&gt;
+      &lt;th&gt;avg&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;64&lt;/td&gt;
+      &lt;td&gt;51.2&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+d = df.cols.get(&#39;x&#39;).agg([&#39;distinct&#39;, F.min, F.max, &#39;avg&#39;])
+d.data.grid()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;x_distinct&lt;/th&gt;
+      &lt;th&gt;x_min&lt;/th&gt;
+      &lt;th&gt;x_max&lt;/th&gt;
+      &lt;th&gt;x_avg&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;64&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;51.2&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+d = df.cols.get(&#39;x&#39;, &#39;y&#39;).agg([&#39;distinct&#39;, F.min, F.max, &#39;avg&#39;])
+d.data.grid()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;x_distinct&lt;/th&gt;
+      &lt;th&gt;x_min&lt;/th&gt;
+      &lt;th&gt;x_max&lt;/th&gt;
+      &lt;th&gt;x_avg&lt;/th&gt;
+      &lt;th&gt;y_distinct&lt;/th&gt;
+      &lt;th&gt;y_min&lt;/th&gt;
+      &lt;th&gt;y_max&lt;/th&gt;
+      &lt;th&gt;y_avg&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;64&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;51.2&lt;/td&gt;
+      &lt;td&gt;67&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+      &lt;td&gt;49.91&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+d = df.cols.get(&#39;x&#39;, &#39;y&#39;).agg({
+    &#39;x&#39;:[&#39;distinct&#39;, F.min], 
+    &#39;y&#39;:[&#39;distinct&#39;, &#39;max&#39;]})
+
+d.data.grid()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;x_distinct&lt;/th&gt;
+      &lt;th&gt;x_min&lt;/th&gt;
+      &lt;th&gt;x_max&lt;/th&gt;
+      &lt;th&gt;y_distinct&lt;/th&gt;
+      &lt;th&gt;y_min&lt;/th&gt;
+      &lt;th&gt;y_max&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;64&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;None&lt;/td&gt;
+      &lt;td&gt;67&lt;/td&gt;
+      &lt;td&gt;None&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+d = df.cols.get(&#39;x&#39;, &#39;y&#39;).agg({
+    &#39;x&#39;:[&#39;distinct&#39;, F.min], 
+    &#39;y&#39;:[&#39;distinct&#39;, &#39;max&#39;]}, stack=True)
+d.data.grid()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;_idx&lt;/th&gt;
+      &lt;th&gt;distinct&lt;/th&gt;
+      &lt;th&gt;min&lt;/th&gt;
+      &lt;th&gt;max&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;64&lt;/td&gt;
+      &lt;td&gt;2.0&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;67&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+      &lt;td&gt;98.0&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+d = df.cols.get(&#39;x&#39;, &#39;y&#39;).groupby(&#39;g&#39;,&#39;n&#39;).agg({
+    &#39;x&#39;:[&#39;distinct&#39;, F.min], 
+    &#39;y&#39;:[&#39;distinct&#39;, &#39;max&#39;]}, stack=True)
+d.data.grid()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;extended-list-of-aggregation&#34;&gt;Extended list of aggregation&lt;/h3&gt;
+&lt;p&gt;An extended list of aggregation is available, both by name and by function in the datafaucet library&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from datafaucet.spark import aggregations as A
+
+d = df.cols.get(&#39;x&#39;, &#39;y&#39;).groupby(&#39;g&#39;,&#39;n&#39;).agg([
+        &#39;type&#39;,
+        (&#39;uniq&#39;, A.distinct),
+        &#39;one&#39;,
+        &#39;top3&#39;,
+    ], stack=True)
+
+d.data.grid()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;g&lt;/th&gt;
+      &lt;th&gt;n&lt;/th&gt;
+      &lt;th&gt;_idx&lt;/th&gt;
+      &lt;th&gt;type&lt;/th&gt;
+      &lt;th&gt;uniq&lt;/th&gt;
+      &lt;th&gt;one&lt;/th&gt;
+      &lt;th&gt;top3&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;int&lt;/td&gt;
+      &lt;td&gt;23&lt;/td&gt;
+      &lt;td&gt;67&lt;/td&gt;
+      &lt;td&gt;{32: 2, 25: 2, 39: 2}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;int&lt;/td&gt;
+      &lt;td&gt;16&lt;/td&gt;
+      &lt;td&gt;74&lt;/td&gt;
+      &lt;td&gt;{70: 1, 74: 1, 19: 1}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;int&lt;/td&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;40&lt;/td&gt;
+      &lt;td&gt;{4: 2, 97: 2, 69: 1}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;int&lt;/td&gt;
+      &lt;td&gt;13&lt;/td&gt;
+      &lt;td&gt;52&lt;/td&gt;
+      &lt;td&gt;{56: 1, 8: 1, 2: 1}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;int&lt;/td&gt;
+      &lt;td&gt;13&lt;/td&gt;
+      &lt;td&gt;79&lt;/td&gt;
+      &lt;td&gt;{36: 2, 89: 1, 35: 1}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;5&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;int&lt;/td&gt;
+      &lt;td&gt;20&lt;/td&gt;
+      &lt;td&gt;45&lt;/td&gt;
+      &lt;td&gt;{61: 1, 34: 2, 70: 1}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;6&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;int&lt;/td&gt;
+      &lt;td&gt;13&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+      &lt;td&gt;{30: 2, 66: 2, 35: 2}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;7&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;int&lt;/td&gt;
+      &lt;td&gt;13&lt;/td&gt;
+      &lt;td&gt;57&lt;/td&gt;
+      &lt;td&gt;{36: 1, 57: 1, 25: 1}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;8&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;int&lt;/td&gt;
+      &lt;td&gt;16&lt;/td&gt;
+      &lt;td&gt;79&lt;/td&gt;
+      &lt;td&gt;{97: 2, 82: 2, 15: 3}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;9&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;int&lt;/td&gt;
+      &lt;td&gt;14&lt;/td&gt;
+      &lt;td&gt;40&lt;/td&gt;
+      &lt;td&gt;{1: 1, 98: 1, 7: 1}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;int&lt;/td&gt;
+      &lt;td&gt;17&lt;/td&gt;
+      &lt;td&gt;76&lt;/td&gt;
+      &lt;td&gt;{4: 2, 86: 2, 67: 1}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;11&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;int&lt;/td&gt;
+      &lt;td&gt;15&lt;/td&gt;
+      &lt;td&gt;24&lt;/td&gt;
+      &lt;td&gt;{64: 1, 8: 1, 53: 2}&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Streaming Analytics</title>
+      <link>/post/streaming-analytics/</link>
+      <pubDate>Tue, 07 Feb 2017 16:28:27 +0800</pubDate>
+      <guid>/post/streaming-analytics/</guid>
+      <description>&lt;p&gt;Many enterprises are moving from batch to streaming data processing. This engineering innovation provides great improvements to many enterprise data pipelines, both on the primary processes such as front-facing services and core operations, as well as on secondary processes such as chain monitoring and operational risk management.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;p1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Streaming Analytics is the evolution of Big Data, where data throughput (velocity) and low-latency are important business KPIs. In such systems, data signals are ingested and produced at high speed  - often in the range of millions of events per seconds. On top of that, the system has still to operate on large volumes of heterogeneous resources, it must execute complex processing to verify the completeness and accuracy of data. Finally, the produced output and data transformation must be produced fast enough to be relevant and actionable.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Batch vs Streaming&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;A batch chain is normally a series of transformations which happen sequentially, from source data to final results. Data moves one batch at a time from one step to the next one. Batch systems usually rely on schedulers to trigger the next step(s) in the pipeline, depending on the status of the previous step.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;p2.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;This approach suffers from a number of limitations:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;It usually introduces unnecessary latency from the moment the initial data is  provided to the moment the results are produced. If those produced results were in fact insights, they might lose their &amp;ldquo;actionable&amp;rdquo; power because it is already too late to act.&lt;/li&gt;
+&lt;li&gt;Responses and results are delivered after the facts, and the only analysis which can be done is a retrospective analysis, but it&#39;s too late to steer or correct the system, or to avoid the incidents in the pipeline.&lt;/li&gt;
+&lt;li&gt;Decisions are made on results from aged or stale data, and they might be incorrect as the result do not reflect any longer the state of the system. This could produce over- and under- steering of the system.&lt;/li&gt;
+&lt;li&gt;Data is at rest. This is not necessarily a drawback, but batch system tend to be passive, with time spent in extracting and loading data from file systems to databases and back with peaks and congestion on the enterprise network rather than a continuous flow of data.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;A queue-centric approach to data processing&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;From 10&#39;000 feet high, a streaming analytics system can best be described as a queue. This logical, distributed queue connects agents producing data to those consuming data. Many components can functions both as sources and sinks for data streams. By highlighting the queue rather than the processing, we stress the fact that data is flowing, and data processing is always interleaved data transfer.&lt;/p&gt;
+&lt;p&gt;The same data element on the queue can potentially be required by many consumers. The pattern that best describe this is the publisher/subscriber pattern.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;p3.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;As the data transiting on the queue can be consumed at different rates, such a queue should also provide a certain persistence, acting as a buffer while producers and consumers are free to access data independently the one from the other.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Streaming Analytics: Definition&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Here below a number of definitions which are widely accepted in the industry:&lt;/p&gt;
+&lt;p&gt;&amp;ldquo;Continuous processing on unbounded tables&amp;rdquo; - &lt;a href=&#34;https://flink.apache.org/&#34;&gt;Apache Flink&lt;/a&gt;, &lt;a href=&#34;http://data-artisans.com/&#34;&gt;Data Artisans&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&amp;ldquo;Software that can filter, aggregate, enrich and analyze a high throughput of data from multiple disparate live data sources and in any data format to identify simple and complex patterns to visualize business in real-time, detect urgent situations, and automate immediate actions&amp;rdquo; - &lt;a href=&#34;https://go.forrester.com/&#34;&gt;Forrester&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Streaming Analytics provides the following advantages w.r.t batch processing: &lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;p4.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Events are analyzed and processed in real-time as they arrive&lt;/li&gt;
+&lt;li&gt;Decisions are timely, contextual, and based on fresh data&lt;/li&gt;
+&lt;li&gt;The latency from raw events to actionable insights in small&lt;/li&gt;
+&lt;li&gt;Data is in motion and flows through the architecture&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Furthermore, batch processing can be easily implemented on streaming computing architectures, by simply scanning the files or datasets. The opposite is not always possible, because the latency and processing overhead of batch systems is usually not negligible when handling small batches or single events.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Streaming Analytics: Events Streams vs Micro-Batches&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Next to latency and throughput, another important parameter which defines a streaming analytics system is the granularity of processing. If the system handles streams one event at a time, we define it as an event-based streaming architecture, if the streams gets consumed in packets/groups of events we call it a micro-batching streaming architecture. In fact you could consider a batch pipeline a streaming architecture, albeit a very slow one, handling the streaming data in very large chunks!&lt;/p&gt;
+&lt;p&gt;The following two pictures give an intuition of how those two paradigms work:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;p5.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Why Streaming Analytics for Chain Monitoring&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Enterprise BI processing chains tend to be very complex, because of the volume, but also because of the number of regulations and compliance measures taken. Hence it&#39;s not uncommon that process changes and unforeseen load can strain part of the chain, with oftentimes big consequences. When incidents occur several steps if not of the entire chain must be re-run. These incidents are often a source of delays, reduced service level and in general lower quality of internal BI process measures and KPIs.&lt;/p&gt;
+&lt;p&gt;Streaming Analytics can be effectively used as the processing paradigm to control and act on metadata produced by BI chains:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Build models using a large amount of sensor meta-data, events, and facts, and determine which patterns are normal and which are anomalous in the received data&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Score, forecast and predict trends on newly generated data, and provide real-time actionable insights&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;Use ETL logs and meta-data to forecast data quality and process operational kpi&#39;s&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Forecasting for Time, Volume, Query Types&lt;/li&gt;
+&lt;li&gt;Forecasting on Errors and Incidents&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;Rationale:&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Data values tend to be stable around some statistics, therefore we could collect the logs and build a model complying on the statistics of incidents, and other monitors values in order to determine the chance of success of a given ETL pipeline.  &lt;/p&gt;
+&lt;p&gt;Same sort of analysis can be applied to variables such as ETL jobs logs to monitor and process volumes, time of processing, query types . This information can be captured at run-time as the ETL jobs are executing. Here below a few examples of anomaly predictions and time series forecasting on machine logs.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Objectives:&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Detect anomalies in log data variables&lt;/li&gt;
+&lt;li&gt;Predict behaviour of ETL processes&lt;/li&gt;
+&lt;li&gt;Predict the probability of future incidents&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;p6.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;ref: https://github.com/twitter/AnomalyDetection&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Use ETL logs and meta-data to identify records and data anomalies&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Detect missing/duplicated data&lt;/li&gt;
+&lt;li&gt;Anomaly detection on patterns and queries types  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;Rationale:&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Data values tend to be stable around some statistics, therefore we could use this statistics to characterize future data and detect potential incident early on the ETL process.&lt;/p&gt;
+&lt;p&gt;This analysis exploit the nature of data being processed as well as the metadata provided by the ETL tools themselves, to increase the chances of both prediction and detection.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Objectives:&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Monitor the records of specific products or data categories&lt;/li&gt;
+&lt;li&gt;Cluster and group Data Logs specific to given categories and collections&lt;/li&gt;
+&lt;li&gt;Detect Anomalies based on Volume, Query types, error count, log count, time, etc&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;p7.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Use ETL logs and meta-data to cluster and classify queries and data transformations&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Cluster processing based on queries types, query result statuses, access logs, and provide an indication on the &amp;ldquo;norms&amp;rdquo; for data and process quality as well as detect possible intrusions and cyber security attacks.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Rationale:&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;ETL metadata, is a rich source of information. Normally this information is manually curated. However metadata is data. And as such it can be processed as text, text extraction techniques can be applied to db logs, query logs and access logs.&lt;/p&gt;
+&lt;p&gt;Once the data is being structured, machine learning and data science techniques can be applied to detect clusters, and (semi) automatically classifying datasets, providing higher SLA, better data quality, and higher prevention of both incidents as well as cybersec attacks.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Objectives&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Extract patterns and information from machine logs&lt;/li&gt;
+&lt;li&gt;Combine multiple sources&lt;/li&gt;
+&lt;li&gt;Normalize the data into a single format&lt;/li&gt;
+&lt;li&gt;Apply machine learning algorithms to cluster and classify the given information&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;p8.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;p9.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Data Governance on Streaming Data&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Streaming data is still data. Hence, it must be managed and governed. One way of managing data is by logically partitioning it in semantic layers, from raw data sources to actionable output. In particular, Streaming data can also be layered: from raw events to alerts and notifications.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;p10.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Streaming Data Components:&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;p11.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;As depicted in the diagram on the right, a streaming analytics, can be logically split three logical function classes:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Data Capture&lt;/li&gt;
+&lt;li&gt;Data Exploration&lt;/li&gt;
+&lt;li&gt;Data Exploitation&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;This can be mapped on 6 logical components:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Data Extraction&lt;/li&gt;
+&lt;li&gt;Data Transport&lt;/li&gt;
+&lt;li&gt;Data Storage&lt;/li&gt;
+&lt;li&gt;Data Analytics&lt;/li&gt;
+&lt;li&gt;Data Visualization&lt;/li&gt;
+&lt;li&gt;Data Signaling&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;Selection of Streaming Analytics Components&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;If we consider the streaming components as a stack, we can select for each component a number of tools available in the market. Therefore, we can define a number of bundles or recipes depending on the technology used for each component of the stack. In the diagram below you can see a fee of those streaming analytics bundles.&lt;/p&gt;
+&lt;p&gt;Some of those bundles are composed of open source projects, others by proprietary closed-source technologies. This first classification positions technologies such as Splunk, HP, and Teradata, SQLStream in one group and the SMACK, ELK, Flink stacks in another. Moreover, some bundles are fully delivered and maintained by a single company (Splunk, HP Arcsight, Elastic) while others bundles are composed by tools maintained by different companies and dev centers (Teradata, Flink, SMACK).&lt;/p&gt;
+&lt;p&gt;Also, considering the streaming analytics use cases, some of this bundles are better tuned to specific domains (cyber security, marketing, operational excellence, infrastructural monitoring)  while others are more less specialized and can be tuned or customized to a specific set of use cases.&lt;/p&gt;
+&lt;p&gt;While the following diagram is not exhaustive, it provides a selection of some of the most bespoken and widely adopted components from streaming analytics as available today in the market.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;p12.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Scorecard&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;The following scorecard can be used to determine which individual components and which bundles are more appropriate and fit-for-purpose provided the use cases, the organization, the capabilities both in terms of people, tools, and technology, the business and financial goals and constraints, and the culture of the given enterprise.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Metrics, Criteria&lt;/li&gt;
+&lt;li&gt;Rationale&lt;/li&gt;
+&lt;li&gt;Open Source
+&lt;ul&gt;
+&lt;li&gt;Sharing the source code, provides a higher level of transparency.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Ease of Use
+&lt;ul&gt;
+&lt;li&gt;How easy it is to implement new use cases? Or to modify existing ones?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Vendor Specific
+&lt;ul&gt;
+&lt;li&gt;Some components, once used might be hard to swap for others&lt;br&gt;
+because of the level of tuning and customization and create technologies lock-ins.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Documentation
+&lt;ul&gt;
+&lt;li&gt;Is the tool well documented? What about, Install, configuration, and examples?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Community
+&lt;ul&gt;
+&lt;li&gt;An active community stimulates and steer the innovation&lt;br&gt;
+process and provides feedback on features, bugs and best practices.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Easy of IT Integration
+&lt;ul&gt;
+&lt;li&gt;How straightforward it is to provide this&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Longevity
+&lt;ul&gt;
+&lt;li&gt;The amount of year of the a given technology in the&lt;br&gt;
+market provides an indication of the maturity of the solution.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Libraries
+&lt;ul&gt;
+&lt;li&gt;Are Plugins and 3rd Party Libraries available?&lt;/li&gt;
+&lt;li&gt;Is there a marketplace, and a community of satellite companies&lt;br&gt;
+contributing to the technology?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Maintenance
+&lt;ul&gt;
+&lt;li&gt;SLA may vary depending of the use case and other requirements&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Performance
+&lt;ul&gt;
+&lt;li&gt;How fast are streams processed?&lt;/li&gt;
+&lt;li&gt;How efficient is the solution provided the same amount of IT resources?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Release cycle
+&lt;ul&gt;
+&lt;li&gt;How often are new releases delivered?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;TCO
+&lt;ul&gt;
+&lt;li&gt;What is the estimated total cost of ownership for the selected cpmponents?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Data Integration
+&lt;ul&gt;
+&lt;li&gt;Can the available data sources be directly used?&lt;/li&gt;
+&lt;li&gt;What about data models and formats?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Expertise
+&lt;ul&gt;
+&lt;li&gt;Are experts available in the job market? Can they be easily acquired?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Data Volumes
+&lt;ul&gt;
+&lt;li&gt;How well can the selected technology cope with the data volumes generated?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Learning Curve
+&lt;ul&gt;
+&lt;li&gt;How much time does it take to master this technology&lt;br&gt;
+from a user/dev/ops perspective?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Data Aggregation
+&lt;ul&gt;
+&lt;li&gt;When models require large context, how well can&lt;br&gt;
+the technology join and merge data?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;User and Access Management
+&lt;ul&gt;
+&lt;li&gt;How well does this solution fit to the &lt;br&gt;
+security and auditing measures setup in the enterprise?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Streaming Meta-Data: Monitoring BI chains&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;From a logical architecture perspective, streaming analytics processing can be seen as data transformations or computing step which fetch data from a distributed queue and push results back to the queue, as previously explained on the log-centric conceptual diagram of streaming computing.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;p13.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;In the previous diagram the logical functions of a streaming analytics systems are divided in groups, depending on the nature of the processing. You could govern streaming analytical functions according to the following taxonomy:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Capturing
+&lt;ul&gt;
+&lt;li&gt;Object Store&lt;/li&gt;
+&lt;li&gt;File Store&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Data Logging
+&lt;ul&gt;
+&lt;li&gt;Data Acquisition via APIs&lt;/li&gt;
+&lt;li&gt;Data Listeners (files, sockets)&lt;/li&gt;
+&lt;li&gt;Data Agents (browsers, devices)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Transformation
+&lt;ul&gt;
+&lt;li&gt;Data Cleaning&lt;/li&gt;
+&lt;li&gt;Data Augmentation&lt;/li&gt;
+&lt;li&gt;Data Filtering&lt;/li&gt;
+&lt;li&gt;Data Standardization&lt;/li&gt;
+&lt;li&gt;Sessioning, Grouping&lt;/li&gt;
+&lt;li&gt;Data Formatting&lt;/li&gt;
+&lt;li&gt;Data Compaction&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Modeling
+&lt;ul&gt;
+&lt;li&gt;Data Modeling&lt;/li&gt;
+&lt;li&gt;Clustering&lt;/li&gt;
+&lt;li&gt;Pattern Extraction&lt;/li&gt;
+&lt;li&gt;Feature Engineering&lt;/li&gt;
+&lt;li&gt;Histogram Analysis&lt;/li&gt;
+&lt;li&gt;Norms Extraction&lt;/li&gt;
+&lt;li&gt;Machine Learning / AI&lt;/li&gt;
+&lt;li&gt;Anomaly Detection&lt;/li&gt;
+&lt;li&gt;Forecasting&lt;/li&gt;
+&lt;li&gt;Recommendation&lt;/li&gt;
+&lt;li&gt;Classification&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Signaling
+&lt;ul&gt;
+&lt;li&gt;Alerting&lt;/li&gt;
+&lt;li&gt;Notification&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Streaming Analytics: Conceptual Architecture&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Before diving in the detailed in the architectural blueprint, let us analyze the main components of such a system. The diagram here below provides a simplified description of the different parts constituting a streaming analytics architecture.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;p14.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Starting from the bottom, we define two storage layers, the top two layers are analytics, and visualization.&lt;/p&gt;
+&lt;p&gt;The first is a typical a Big Data layer for long term storage of data. It provides an excellent and cost efficient solution to store raw stream events and meta-data. Data on this layer is most efficiently stored in large files. This layer is usually not great for random access of specific records, but works well to stream out large files and have them processed in engines such as Presto, Hive, and Spark.&lt;/p&gt;
+&lt;p&gt;The second storage layer is more tailored toward objects and documents. The characteristic of this layer is that access is fast. This form of storage provides better data search and exploration functions. Moreover, a document store provides fast searches by indexing textual data, and fast access to individual stream events/elements. This layer is typically realized using NoSQL technologies, out of which two of them Cassandra, and Elasticsearch, are discussed in better details in the following sections.&lt;/p&gt;
+&lt;p&gt;The third layer is meant for model building and data exploration. Presto and Hive are SQL engines part of the Hadoop ecosystem and they are tuned respectively for interactive exploratory queries and large batch analysis on big data volumes. Spark is also an interesting components as it allows to interleave Machine Learning operations with both SQL queries and data transformations using languages such as Scala and Python.&lt;/p&gt;
+&lt;p&gt;The top layer is populated by data visualization tools. These tools usually access the underlying analytical layer in order to perform the computations, and then display the results using dashboards, graphs and widgets, often via a Web UX.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Streaming Analytics: Architectural Blueprint and Data Landscape&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;The following architectural blueprint, provides a possible implementation for meta-data managements and chain monitoring. It consists of three main parts.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;p15.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Description:&lt;/p&gt;
+&lt;p&gt;This open source blueprint serves a number of goals:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;long term storage of the raw events (data lake)&lt;/li&gt;
+&lt;li&gt;Data exploration and validation of models and hypotheses&lt;/li&gt;
+&lt;li&gt;Implementation and development of ad-hoc  use cases&lt;/li&gt;
+&lt;li&gt;Model creation and model validation using data science and machine learning tools.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Considerations&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;The above blueprint architecture is a possible end state for chain monitoring and operational excellence. It can definitely be phased in stages according to the organization&#39;s appetite, roadmap and strategy to streaming analytics and real-time data processing.&lt;/p&gt;
+&lt;p&gt;One general remark is that each streaming technology and each component of the above blueprint has its &amp;ldquo;sweet spot&amp;rdquo; in the overall data landscape.&lt;/p&gt;
+&lt;p&gt;Elasticsearch is extremely efficient at storing, capturing and display time series data. However because of the way the data is structured complex queries and joins are usually not performed efficiently within this platform. This is way for complex query Elasticsearch can be complemented by other solutions such as Spark, Presto, Hive, Cassandra or other analytical systems such as enterprise data warehouses to act as &amp;ldquo;powerhouse&amp;rdquo; for complex queries and aggregation.&lt;/p&gt;
+&lt;p&gt;See diagram here below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;p16.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The proposed combination of file and object data stores, topped by Spark is quite powerful and provided probably the highest level of flexibility in order to implement each specific use case, in a tailored and customized way. Spark uniqueness comes from the fact that it provides a unified data programming paradigm. Spark combines SQL, Python, Scala, Java, R, as well as streaming and machine learning capabilities under the same programming paradigm, and using the very same engine to perform this variety of computations.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Recommendations&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;The suggested blueprint requires of course further analysis and it&#39;s advised to determine which scoring criteria should weigh more in the selection and determine which components or bundles in the architecture should be prioritized.&lt;/p&gt;
+&lt;p&gt;It&#39;s also probably wise, seen the vast choice of components, tools, libraries and solutions to identify which level of integration (libraries or ready made packaged solutions) is preferred in the organization. Depending on the availability of devops resources, you can trade flexibility, and customized solution for pre-canned use-case specific solutions.&lt;/p&gt;
+&lt;p&gt;Active human-manned monitoring is becoming unfeasible, especially when hundreds of dashboards are produced by systems such as Kibana. It&#39;s therefore highly recommended to complement the dashboarding approach to a more data-driven solution where patterns and anomalies are learned and detected autonomously by the system.&lt;/p&gt;
+&lt;p&gt;Also the availability of raw metadata signals as part of this architecture stored in a data lake and transported on kafka will probably constitute a great substrate to create and develop other use case in other domains (fraud, cybersecurity, marketing, personalized recommenders, predictive services etc.)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Streaming Analytics Engines: Open Source Projects&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;For further reading, let&#39;s focus on computing engines, as streaming computing engines are the foundation for any domain-specific streaming application. Here below, it&#39;s presented a selection of streaming processing technologies which have been developed in the last years:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;p17.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;For a detailed description of those technologies, have a look at this post:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.linkedin.com/pulse/streaming-analytics-story-many-tales-natalino-busa&#34;&gt;https://www.linkedin.com/pulse/streaming-analytics-story-many-tales-natalino-busa&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>The AI scene in the valley</title>
+      <link>/post/ai-trip/</link>
+      <pubDate>Tue, 07 Feb 2017 16:28:27 +0800</pubDate>
+      <guid>/post/ai-trip/</guid>
+      <description>&lt;p&gt;A few weeks back I was lucky enough to attend and present at the &lt;a href=&#34;http://globalbigdataconference.com/santa-clara/global-artificial-intelligence-conference/schedule-83.html&#34;&gt;Global AI Summit&lt;/a&gt; in the bay area. This is my personal trip report about the people I have met and some of the projects and startups I came across.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;AI is eating the world.&lt;/strong&gt;&lt;br&gt;
+First of all, let me start by saying that literally &lt;em&gt;everybody&lt;/em&gt; is doing (or claiming to do) AI in the bay area. AI has inflamed the spirits of pretty much every single software engineer, data scientist, business developer, talent scout, and VC in the greater San Francisco area.&lt;/p&gt;
+&lt;p&gt;All tools and services presented at the conference embed some form of machine intelligence, and scientists are the new cool kids on the block. Software engineering has probably reached an all-time low in terms of coolness in the bay area, and regarded almost as the &amp;ldquo;necessary evil&amp;rdquo; in order to unleash the next AI interface. This is somewhat counter-intuitive, as actually &lt;a href=&#34;http://www.kdnuggets.com/2016/03/dont-buy-machine-learning.html&#34;&gt;Machine Learning and AI are more like the raisins in raisin bread&lt;/a&gt;, as Peter Norvig and &lt;a href=&#34;http://twitter.com/marcossponton&#34;&gt;Marcos Sponton&lt;/a&gt; say.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;What&#39;s behind AI?&lt;/strong&gt;&lt;br&gt;
+Good engineering, and great business focus is still the foundation of many AI-powered tools and services. In my opinion, there is no silver bullet: AI powered applications must still be based on good engineering practices if they want to succeed.&lt;/p&gt;
+&lt;p&gt;We have seen a similar wave during the &lt;a href=&#34;http://en.wikipedia.org/wiki/Dot-com_bubble&#34;&gt;dot-com&lt;/a&gt; bubble in the beginning of the millennium when web-shops were popping up with little understanding of the underlying retail and marketplace businesses. Since then, web applications have matured and today we value those services both for their digital journey as much as for their operational excellence and their ability to deliver. I believe that a similar maturing path will happen for AI powered applications.&lt;/p&gt;
+&lt;p&gt;AI is still a very opaque concept. In the worst case it could be just a scripted process, more often is a set of predictive machine learning models. Because of the vagueness of the term, others are branding new terms in order to differentiate themselves: machine intelligence, cognitive/sentient computing, intelligent computing. Advertising more AI-related terms is not really helping clarifying what is running under the hood. After some digging, startups operating in the AI space are mainly interpreting AI as some form of artificial/machine learning (aka &lt;a href=&#34;http://en.wikipedia.org/wiki/Weak_AI&#34;&gt;weak AI&lt;/a&gt;) tailored to very specific tasks.&lt;/p&gt;
+&lt;p&gt;Today, with some exceptions, the term AI is used to describe &lt;a href=&#34;http://en.wikipedia.org/wiki/Artificial_neural_network&#34;&gt;Artificial Neural Networks&lt;/a&gt; (ANNs), and &lt;a href=&#34;http://en.wikipedia.org/wiki/Deep_learning&#34;&gt;Deep Learning&lt;/a&gt; (DL) mostly related to text, speech, image, and video processing. Putting the hype aside for a moment, without any doubts we can acknowledge that &lt;a href=&#34;http://lecture2go.uni-hamburg.de/l2go/-/get/v/16622&#34;&gt;the renaissance of deep learning&lt;/a&gt; has contributed to the development of conversational interfaces.&lt;/p&gt;
+&lt;p&gt;The core of this new generation services might by still hard-coded or scripted, but the interface is going to be more and more flexible, understanding our spoken, text, and visual cues. This human-centric approach to UIs is definitely going to shape the way we interact with devices. This trend goes under the buzz of &lt;a href=&#34;http://blog.careerfoundry.com/ui-design/what-is-zero-ui&#34;&gt;Natural/Zero UIs&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Let&#39;s go deeper in the stack, away from the front-end and human-machine Natural UIs. &lt;a href=&#34;http://en.wikipedia.org/wiki/Weak_AI&#34;&gt;Narrow AI&lt;/a&gt;, in particular deep learning and hierarchical predictive models are getting traction as core data components, in particular for applications such as &lt;a href=&#34;http://static.googleusercontent.com/media/research.google.com/en//pubs/archive/45530.pdf&#34;&gt;recommender systems&lt;/a&gt;, fraud detection, churn and propensity models, anomaly detection and data auditing.&lt;/p&gt;
+&lt;p&gt;Before moving on the following list: I am not associated with any of these companies, however I did find their approach worth mentioning and good food for thoughts for the entrepreneurs and the data people following this blog. So, as always, take the following with a pinch of salt and apply your critical &amp;amp; analytical thinking to it. Enjoy :)&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://numenta.com/applications/&#34;&gt;Numenta&lt;/a&gt; is tackling one of the most important scientific challenges of all time: reverse engineering the neocortex. Studying how the brain works helps us understand the principles of intelligence and build machines that work on the same principles. They have invested heavily in time series research, anomaly detection and natural language processing. By converting text, and geo-spatial data to time series Numenta can detect patterns and anomalies in temporal data.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.recognos.com/smart-data-platform/&#34;&gt;Recognos&lt;/a&gt;&amp;rsquo; main product &amp;ldquo;Smart Data Platform&amp;rdquo; is meant to normalize and integrate the data that is stored in unstructured, semi-structured and structured content. The data unification process is driven by the business ontology. Data extraction, taxonomy, semantic tagging and structured data mapping are all steps in this modern approach to data preparation and normalization. &lt;a href=&#34;http://www.recognos.com/smart-data-platform/&#34;&gt;Recognos&lt;/a&gt;&amp;rsquo; ultimate goal is to allow to use the data that is stored in the un-structured, semi-structured and structured content using a unique semantic meaning and unique query language.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.appzen.com/&#34;&gt;Appzen&lt;/a&gt; is picking up the challenge of automating the auditing of expenses in real-time. This service collects all receipts, tickets, and other documentation provided and produces a full understanding of the who, where, and why of every expense. &lt;a href=&#34;http://www.appzen.com/&#34;&gt;Appzen&lt;/a&gt;&amp;lsquo;s machine learning engine verifies receipts, eliminates duplicates, and searches through hundreds of data sources to verify merchant identities and validate the truthfulness of every expense – ensuring there is no fraud, misuse, or violation of laws.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://talla.com/features&#34;&gt;Talla&lt;/a&gt; is a lightweight system which plugs into messaging systems as a virtual team members, executing on-boarding, e-learning, and team building process flows, and engaging with the various team members, taking over from tasks which are usually done by team managers, scrum masters, and facilitating teams. It employs a combination of natural language processing, robotic process automation, and user- and company- defined rules.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.inbenta.com/en/features/self-service/&#34;&gt;Inbenta&lt;/a&gt; has build an extensive multilingual knowledge supporting over 25 native languages and counting, including English, Spanish, Italian, Dutch and German. Its NLP engine understands the nuances of human conversation, so it answers a query based on meaning, not individual keywords. This is a good example of a company which relies on good business development and a great core team of linguistics and language experts. By combining these elements with NLP and Deep Learning techniques they can power &lt;a href=&#34;http://medium.com/cyber-tales/ai-and-speech-recognition-a-primer-for-chatbots-a63af042526a#.o8svmik8j&#34;&gt;chatbots&lt;/a&gt;, email management, surveys and other text-based use cases for a number of verticals.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.lymba.com/knowledge-extraction-k-extractor.html&#34;&gt;Lymba&lt;/a&gt; is also tackling textual information, with the goal of extracting insights and non-trivial bits of knowledge from a semantic graph of heterogeneous linked data elements. Lymba offers transformative capabilities that enable discovery of actionable knowledge from structured and unstructured data, providing business with invaluable insights. Lymba has developed a technology for deep semantic processing that extracts semantic relations between all concepts in the text. One of Lymba&#39;s product, the &amp;ldquo;K-extractor&amp;rdquo; enables intelligent search, question answering, summarization of a document, generating scientific profiles, etc.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.jetlore.com/dynamic-layouts/&#34;&gt;Jetlore&lt;/a&gt; is bringing personalization one step further by creating websites and mobile apps which are extremely tailored to each user, both in terms of content as well as layout, color, highlights, promotions, images, and offers. All site assets are ranked individually for each customer, and selected at the time of interaction based on the layout&#39;s configuration. Jetlore can select the best categories, brands, and collections of products from your inventory for each user, and automatically feature the best images to represent them. &lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://ownerlistens.com/&#34;&gt;Ownerlisten&lt;/a&gt; is a smart messaging pipelining solution, rerouting messages in a given organization to the right person or process depending on the nature of the message. Users can filter and process messages combining business rules as well as automated text processing. This is essential in businesses where machine learned models might not be provide sufficiently accuracy for certain topics. &lt;a href=&#34;http://ownerlistens.com/&#34;&gt;Ownerlisten&lt;/a&gt; is another good example of how AI and NLP can be organically combined with user defined messaging and communication flows. By combining domain expertise, solid engineering and NLP engines, &lt;a href=&#34;http://ownerlistens.com/&#34;&gt;ownerlisten&lt;/a&gt; can deliver very smooth user and customer journeys in a number of different industries and use cases.&lt;/p&gt;
+&lt;p&gt;This list would not be complete without at least a company offering AI, Machine Learning, Data plumbing, Data engineering, API and Application engineering services. Software and data engineering, might be less cool a land of scientists, but it&#39;s still the backbone on top of which all those awesome solutions and products are built. &lt;a href=&#34;http://www.datamonsters.co/&#34;&gt;Data Monster&lt;/a&gt; is one of those great studios accelerating mvp and product development, with a strong affinity to data processing at scale and all the right techs in the basket (Scala, Python, R, Java, JavaScript, Hadoop, Spark, Hive, Play, Akka, MySQL, PostgreSQL, AWS, Cassandra, etc ).&lt;/p&gt;
+&lt;p&gt;I finish this post mentioning and thanking a number of great people I have met during this trip, for their charisma and inspiring ideas and conversations:
+&lt;a href=&#34;http://www.linkedin.com/in/hamid-pirahesh-38368010/&#34;&gt;Hamid Pirahesh&lt;/a&gt;,
+&lt;a href=&#34;http://www.linkedin.com/in/davidtalby/&#34;&gt;David Talby&lt;/a&gt;,
+&lt;a href=&#34;http://www.linkedin.com/in/chiefscientist/&#34;&gt;Alexy Khabrov&lt;/a&gt;,
+&lt;a href=&#34;http://www.linkedin.com/in/atsyplikhin/&#34;&gt;Alexander Tsyplikhin&lt;/a&gt;,
+&lt;a href=&#34;http://www.linkedin.com/in/chrisemoody/&#34;&gt;Christopher Moody&lt;/a&gt;,
+&lt;a href=&#34;http://www.linkedin.com/in/mifeng/&#34;&gt;Michael Feng&lt;/a&gt;,
+&lt;a href=&#34;http://www.linkedin.com/in/deliprao/&#34;&gt;Delip Rao&lt;/a&gt;,
+&lt;a href=&#34;http://www.linkedin.com/in/eldarsadikov/&#34;&gt;Eldar Sadikov&lt;/a&gt;,
+&lt;a href=&#34;http://www.linkedin.com/in/michellecasbon/&#34;&gt;Michelle Casbon&lt;/a&gt;,
+&lt;a href=&#34;http://www.linkedin.com/in/mustafameisa/&#34;&gt;Mustafa Eisa&lt;/a&gt;,
+&lt;a href=&#34;http://www.linkedin.com/in/ahmed-bakhaty/&#34;&gt;Ahmed Bakhaty&lt;/a&gt;,
+&lt;a href=&#34;http://www.linkedin.com/in/adibittan/&#34;&gt;Adi Bittan&lt;/a&gt;,
+&lt;a href=&#34;http://www.linkedin.com/in/jtorras/&#34;&gt;Jordi Torras&lt;/a&gt;, and
+&lt;a href=&#34;http://www.linkedin.com/in/francesco-corea-6b4b4a44/&#34;&gt;Francesco Corea&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Data Science Q&amp;A</title>
+      <link>/post/data-science-qa/</link>
+      <pubDate>Tue, 07 Feb 2017 00:00:00 +0000</pubDate>
+      <guid>/post/data-science-qa/</guid>
+      <description>&lt;p&gt;I was kindly asked by Prof. Roberto Zicari to answer a few questions on Data Science and Big Data for &lt;a href=&#34;http://www.odbms.org&#34;&gt;www.odbms.org&lt;/a&gt; - Let me know what you think of it, looking forward to your feedback in the comment below. Cheers, Natalino&lt;/p&gt;
+&lt;p&gt;Q1. Is domain knowledge necessary for a data scientist?&lt;/p&gt;
+&lt;p&gt;It’s not strictly necessary, but it does not harm either. You can produce accurate models without having to understand the domain. However, some domain knowledge will speed up the process of selecting relevant features and will provide a better context for knowledge discovery in the available datasets.&lt;/p&gt;
+&lt;p&gt;Q2. What should every data scientist know about machine learning?&lt;/p&gt;
+&lt;p&gt;First of all, the foundation: statistics, algebra and calculus. Vector, matrix and tensor math is absolutely a must. Let’s not forget that datasets after all can be handled as large matrices! Moving on specifically on the topic of machine learning: a good understanding of the role of &lt;a href=&#34;https://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff&#34;&gt;bias and variance&lt;/a&gt; for predictive models. Understanding the reasons for models and parameters &lt;a href=&#34;https://en.wikipedia.org/wiki/Regularization_(mathematics)&#34;&gt;regularization&lt;/a&gt;. Model &lt;a href=&#34;https://en.wikipedia.org/wiki/Cross-validation_(statistics)&#34;&gt;cross-validation&lt;/a&gt; techniques. Data &lt;a href=&#34;https://en.wikipedia.org/wiki/Bootstrapping_(statistics)&#34;&gt;bootstrapping&lt;/a&gt; and &lt;a href=&#34;https://en.wikipedia.org/wiki/Bootstrap_aggregating&#34;&gt;bagging&lt;/a&gt;. Also I believe that cost based, gradient iterative optimization methods are a must, as they implement the “learning” for four very powerful classes of machine learning algorithms: glm’s, boosted trees, svm and kernel methods, neural networks. Last but not least an introduction to Bayesian statistics as many&lt;/p&gt;
+&lt;p&gt;Q3. What are the most effective machine learning algorithms?&lt;/p&gt;
+&lt;p&gt;Regularized &lt;a href=&#34;https://en.wikipedia.org/wiki/Generalized_linear_model&#34;&gt;Generalized Linear Models&lt;/a&gt;, and their further generalization as Artificial Neural Networks (&lt;a href=&#34;https://en.wikipedia.org/wiki/Artificial_neural_network&#34;&gt;ANN’s&lt;/a&gt;), &lt;a href=&#34;https://en.wikipedia.org/wiki/Gradient_boosting&#34;&gt;Boosted&lt;/a&gt; and &lt;a href=&#34;https://en.wikipedia.org/wiki/Random_forest&#34;&gt;Random Forests&lt;/a&gt;. Also I am very interested in dimensionality reduction and unsupervised machine learning algorithms, such as &lt;a href=&#34;https://en.wikipedia.org/wiki/T-distributed_stochastic_neighbor_embedding&#34;&gt;T-SNE&lt;/a&gt;, &lt;a href=&#34;https://en.wikipedia.org/wiki/OPTICS_algorithm&#34;&gt;OPTICS&lt;/a&gt;, and &lt;a href=&#34;https://en.wikipedia.org/wiki/Topological_data_analysis&#34;&gt;TDA&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Q4. What is your experience with data blending?&lt;/p&gt;
+&lt;p&gt;Blending data from different domains and sources might increases the explanatory power of the model. However, it’s not always easy to determine beforehand if this data will improve the models. Data blending provide more features and the may or may be not correlated with what you wish to predict. It’s therefore very important to carefully validate the trained model using cross validation and other statistical methods such as variances analysis on the augmented dataset.&lt;/p&gt;
+&lt;p&gt;Q5. Predictive Modeling: How can you perform accurate feature engineering/extraction?&lt;/p&gt;
+&lt;p&gt;Let’s tackle feature extraction and feature engineering separately. Extraction can be as simple as getting a number of fields from a database table, and as complicated as extracting information from a scanned paper document using &lt;a href=&#34;https://en.wikipedia.org/wiki/Optical_character_recognition&#34;&gt;OCR&lt;/a&gt; and image processing techniques. Feature extraction can easily be the hardest task in a given data science engagement.&lt;/p&gt;
+&lt;p&gt;Extracting the right features and raw data fields usually requires a good understanding of the organization, the processes and the physical/digital data building blocks deployed in a given enterprise. It’s a task which should never be underestimated as usually the predictive model is just as good as the data which is used to train it.&lt;/p&gt;
+&lt;p&gt;After extraction, there comes feature engineering. This step consists of a number of data transformations, oftentimes dictated by a combination of intuition, data exploration, and domain knowledge. Engineered features are usually added to the original samples’ features and provided as the input data to the model.&lt;/p&gt;
+&lt;p&gt;Before the renaissance of neural networks and hierarchical machine learning, feature engineering was as the models were too shallow to properly transform the input data in the model itself. For instance, &lt;a href=&#34;https://en.wikipedia.org/wiki/Decision_tree&#34;&gt;decision trees&lt;/a&gt; can only split data areas along the features’ axes, therefore to correctly classify donut shaped classes you will need feature engineering to transform the space to polar coordinates.&lt;/p&gt;
+&lt;p&gt;In the past years, however, models usually have multiple layers, as machine learning experts are deploying increasingly “deeper” models. Those models usually can “embed” feature engineering as part of the internal state representation of data, rendering manual feature engineering less relevant. For some examples applied to text check the section “Visualizing the predictions and the “neuron” firings in the RNN” in &lt;a href=&#34;http://karpathy.github.io/2015/05/21/rnn-effectiveness/&#34;&gt;The Unreasonable Effectiveness of Recurrent Neural Networks&lt;/a&gt;. These models are also usually referred as “end-to-end” learning, although this definition it’s still vague not unanimously accepted in the AI and Data Science communities.&lt;/p&gt;
+&lt;p&gt;So what about feature engineering today? Personally, I do believe that some feature engineering is still relevant to build good predictive systems, but should not be overdone, as many features can be now learned by the model itself, especially in the audio, video, text, speech domains.&lt;/p&gt;
+&lt;p&gt;Q6. Can data ingestion be automated?&lt;/p&gt;
+&lt;p&gt;Yes. But beware of metadata management. In particular, I am a big supporter of “closed loop” analytics on metadata, where changes in the data source formats or semantics are detected by means of analytics and machine learning on the metadata itself.&lt;/p&gt;
+&lt;p&gt;Q7. How do you ensure data quality?&lt;/p&gt;
+&lt;p&gt;I tend to rely on the “wisdom of the crowd” by implementing similar analyses using multiple techniques and machine learning algorithms. When the results diverge, I compare the methods to gain any insight about the quality of both data as well as models. This approach works also well to validate the quality of streaming analytics: in this case the batch historical data can be used to double check the result in streaming mode, providing, for instance, end-of-day or end-of-month reporting for data correction and reconciliation.&lt;/p&gt;
+&lt;p&gt;Q8. What techniques can you use to leverage interesting metadata?&lt;/p&gt;
+&lt;p&gt;Fingerprinting is definitely an interesting field for metadata generation. I have worked extensively in the past on audio and video fingerprinting. However this technique is very general and can be applied to any sort of data: structure data, time series, etc. Data fingerprinting can be used to summarize web pages retrieved by users or to define the nature and the characteristics of data flows in network traffic. I also work often with time (event time, stream time, capture time), network data (ip/mac addresses, payloads, etc.) and geolocated information to produce rich metadata for my data science projects and tutorials.&lt;/p&gt;
+&lt;p&gt;Q9. How do you evaluate if the insight you obtain from data analytics is &amp;ldquo;correct&amp;rdquo; or &amp;ldquo;good&amp;rdquo; or &amp;ldquo;relevant&amp;rdquo; to the problem domain?&lt;/p&gt;
+&lt;p&gt;Initially, I interact with domain experts for a first review on the results. Subsequently, I make sure than the model is brought into “action”. Relevant insight, in my opinion, can always be assessed by measuring their positive impact on the overall application. If human interaction is in the loop, the easiest method is actually to measure the impact of the relevant insight in their digital journey.&lt;/p&gt;
+&lt;p&gt;Q10. What were your most successful data projects? And why?&lt;/p&gt;
+&lt;p&gt;1. Geolocated data pattern analysis, because of its application to fraud prevention and personalized recommendations. 2. time series analytics for anomaly detection and forecasting of temporal signals - in particular for enterprise processes and KPI’s. 3. Converting images to features, because it allows images/videos to be indexed and classified using standard BI tools.&lt;/p&gt;
+&lt;p&gt;Q11. What are the typical mistakes done when analyzing data for a large scale data project? Can they be avoided in practice?&lt;/p&gt;
+&lt;p&gt;Aggregating too much will most of the time “flatten” signals in large datasets. To prevent this, try using more features, and/or provide a finer segmentation of the data space. Another common problem is “buring” signals provided by a small class of samples with those of a dominating class. Models discriminating unbalanced classes tend to perform worse as the dataset grows. To solve this problem try to rebalance the classes by applying stratified resampling, or weighting the results, or boosting on the weak signals.&lt;/p&gt;
+&lt;p&gt;Q12. What are the ethical issues that a data scientist must always consider?&lt;/p&gt;
+&lt;p&gt;1. Respect individual privacy and possibly enforce it algorithmically. 2. Be transparent and fair on the use of the provided data with the legal entities and the individuals who have generated the data. 3. Avoid building models discriminating and scoring based on race, religion, sex, age etc as much as possible and be aware of the implication of reinforcing decisions based on the available data labels.&lt;/p&gt;
+&lt;p&gt;On last point, I would like to close this interview with an interesting idea around “equal opportunity” for ethical machine learning. This concept is visually explained on the following Google Research page &lt;a href=&#34;https://research.google.com/bigpicture/attacking-discrimination-in-ml/&#34;&gt;Attacking discrimination with smarter machine learning&lt;/a&gt; from a recent paper by &lt;a href=&#34;https://drive.google.com/file/d/0B-wQVEjH9yuhanpyQjUwQS1JOTQ/view&#34;&gt;Hardt, Price, Srebro&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Rewind 2016</title>
+      <link>/post/rewind-2016/</link>
+      <pubDate>Thu, 29 Dec 2016 00:00:00 +0000</pubDate>
+      <guid>/post/rewind-2016/</guid>
+      <description>&lt;p&gt;2016 has been simply incredible. What you will read next is a summary of my journey last year. It&#39;s mostly an open letter to thank all the wonderful people that inspired and supported me in 2016.&lt;/p&gt;
+&lt;p&gt;Job wise, the year started at &lt;a href=&#34;https://www.ing.com/&#34;&gt;ING&lt;/a&gt; as enterprise data architect where I followed closely several scrum teams on cutting edge projects such as streaming analytics, fraud and cyber security, api&#39;s, data lakes, and predictive analytics. I really would like to thank ING, in particular &lt;a href=&#34;https://nl.linkedin.com/in/henkkolk&#34;&gt;Henk Kolk&lt;/a&gt;, &lt;a href=&#34;https://www.linkedin.com/in/peterhmjacobs&#34;&gt;Peter Jacobs&lt;/a&gt;, &lt;a href=&#34;https://nl.linkedin.com/in/beatezwijnenberg&#34;&gt;Beate Zwijnenberg&lt;/a&gt;, &lt;a href=&#34;https://www.linkedin.com/in/jpmjacobs&#34;&gt;Paul Jacobs&lt;/a&gt;, and &lt;a href=&#34;https://nl.linkedin.com/in/ferdscheepers&#34;&gt;Ferd Scheepers&lt;/a&gt; and so many others which I have met during my last engagements at ING.&lt;/p&gt;
+&lt;p&gt;My journey has continued in 2016 with &lt;a href=&#34;http://www.teradata.com/&#34;&gt;Teradata&lt;/a&gt;, where I am currently involved in the middle of a huge transformation from products to services, where Teradata is expanding from an &lt;a href=&#34;https://en.wikipedia.org/wiki/Data_warehouse&#34;&gt;EDW&lt;/a&gt; vendor to a data-driven solution selling enterprise, where open source, data science, and tailored data architecture are becoming the new &amp;ldquo;bread and butter&amp;rdquo; for new business creation. A &amp;ldquo;thank you&amp;rdquo; is due to the Teradata team in particular to &lt;a href=&#34;https://nl.linkedin.com/in/sergiofranssen&#34;&gt;Sergio Franssen&lt;/a&gt;, Head of Professional Services in Benelux and Eric-Jan van Meningen, Global Sales Director and to a great team of awesome data scientists and data engineers.&lt;/p&gt;
+&lt;p&gt;Along the way, I have enjoyed participating to a number of initiatives: writing blogs and tutorials for the &lt;a href=&#34;http://www.oreilly.com/&#34;&gt;O&#39;Reilly Media Group&lt;/a&gt; where I would like to thank Ben Lorica, &lt;a href=&#34;https://www.linkedin.com/in/ceteri&#34;&gt;Paco Nathan&lt;/a&gt;, &lt;a href=&#34;https://www.linkedin.com/in/shannon-cutt-79303054&#34;&gt;Shannon Cutt&lt;/a&gt;, &lt;a href=&#34;http://radar.oreilly.com/jennw&#34;&gt;Jenn Webb&lt;/a&gt; and so many others for the warm support during the last projects together. Deepening into AI with the &lt;a href=&#34;http://www.cognitivefinance.ai/&#34;&gt;Cognitive Finance Group&lt;/a&gt; founded by &lt;a href=&#34;https://uk.linkedin.com/in/claradurodie&#34;&gt;Clara Durondie&lt;/a&gt;. Also supporting the &lt;a href=&#34;http://thepalladiumgroup.com/&#34;&gt;Palladium&lt;/a&gt; team, thanks to &lt;a href=&#34;https://ae.linkedin.com/in/mohamed-el-aref-a14a906&#34;&gt;Mohamed El Aref&lt;/a&gt;. Last but not least, I have always enjoyed the meetups of the &lt;a href=&#34;http://www.spark.tc/&#34;&gt;IBM Spark Technology Council&lt;/a&gt;, and I would like to thank in particular &lt;a href=&#34;https://www.linkedin.com/in/robertdthomas&#34;&gt;Robert Thomas&lt;/a&gt;, &lt;a href=&#34;https://www.linkedin.com/in/katharinekearnan&#34;&gt;Katharine Kearnan&lt;/a&gt;, &lt;a href=&#34;https://www.linkedin.com/in/remus-lazar-9766984&#34;&gt;Remus Lazar&lt;/a&gt; and &lt;a href=&#34;https://www.linkedin.com/in/holdenkarau&#34;&gt;Holden Karau&lt;/a&gt; for the great discussion about Spark devs at the IBM spark technology center and pokemons.&lt;/p&gt;
+&lt;p&gt;Tech evangelism would not be worth this name without a thriving community of crazy coders, mad scientists, and puny hackers, and the many online and life meetup sessions and code sharing events, webinars and hot discussions on the future of Data Computing and Data Science, thank you all for sharing code and ideas! I have learned so much from you all.&lt;/p&gt;
+&lt;p&gt;Some buddies of mine out there are building some amazing techs so I wish the very best to &lt;a href=&#34;https://uk.linkedin.com/in/edwardkibardin&#34;&gt;Edward Kibardin&lt;/a&gt; (&lt;a href=&#34;https://datarefiner.com/&#34;&gt;datarefiner.com&lt;/a&gt;), &lt;a href=&#34;https://www.linkedin.com/in/cfregly&#34;&gt;Chris Fregly&lt;/a&gt; (&lt;a href=&#34;http://pipeline.io/&#34;&gt;pipeline.io&lt;/a&gt;), &lt;a href=&#34;https://nl.linkedin.com/in/olafmolenveld&#34;&gt;Olaf Molenveld&lt;/a&gt; (&lt;a href=&#34;http://vamp.io/&#34;&gt;vamp.io&lt;/a&gt;), &lt;a href=&#34;https://it.linkedin.com/in/gaspare-maria-55b4996&#34;&gt;Gaspare Maria&lt;/a&gt; (&lt;a href=&#34;http://www.gfmintegration.com/&#34;&gt;continua&lt;/a&gt;) for keeping up the great work of building AI and Data-Driven solutions on top of bespoken open-source technologies.&lt;/p&gt;
+&lt;p&gt;Inspiration is a two way street, as the energy and the effort you put into studying, learning and developing ideas comes back as feedback and support from those who follow you. So a big thank you, to you who are reading this right now. It&#39;s you that push me to do event better the next time and keep it up the great work.&lt;/p&gt;
+&lt;p&gt;Technology: What have I learned this year.&lt;/p&gt;
+&lt;p&gt;2016 has seen me getting even more involved with &lt;a href=&#34;http://spark.apache.org/&#34;&gt;Spark&lt;/a&gt;, both on the Scala and the Python APIs. Next to that, loads of deep learning on my daily diet, in particular &lt;a href=&#34;https://keras.io/&#34;&gt;Keras&lt;/a&gt; and &lt;a href=&#34;https://www.tensorflow.org/&#34;&gt;Tensorflow&lt;/a&gt;, both on bespoken data sets (CIFAR, MNIST) but also &amp;ldquo;on the job&amp;rdquo; on financial, telecom and social data. Another fantastic discovery this year was the &lt;a href=&#34;http://jupyter.org/&#34;&gt;Jupyter project&lt;/a&gt; as it goes way way further than the bespoken notebook. In particular, I have spent some time on jupyter-powered APIs with the jupiter gateway project. Also notable mention to the &lt;a href=&#34;https://toree.apache.org/&#34;&gt;Apache Toree&lt;/a&gt; project which provides a Spark/Scala kernel to Jupyter, as I consider it probably the best notebook integration available, next to the &lt;a href=&#34;https://github.com/andypetrella/spark-notebook&#34;&gt;Spark Notebook&lt;/a&gt; of my buddies &lt;a href=&#34;https://be.linkedin.com/in/andypetrella&#34;&gt;Andy Petrella&lt;/a&gt; and &lt;a href=&#34;https://be.linkedin.com/in/xavier-tordoir-ba95b673&#34;&gt;Xavier Tordoir&lt;/a&gt; at &lt;a href=&#34;http://www.kensu.io/&#34;&gt;kensu.io&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Technology wise, this year was the definitely the year of Spark, Flink, Cassandra, ElasticSearch, Akka and Kafka. A lot of great architectures and stacks have be crafted using these building blocks for a variety of use cases and scenarios, such as Finance, Telecom, and HealthTech.&lt;/p&gt;
+&lt;p&gt;Cloud technologies have also been a revelation for me in 2016, with advances and innovations such as containers-as-a-service, cloud AI/ML services, better virtualization technologies with GPU support and better resource negotiators. Worth mentioning three techs I have enjoyed this year are &lt;a href=&#34;https://www.docker.com/&#34;&gt;Docker&lt;/a&gt;, &lt;a href=&#34;http://mesos.apache.org/&#34;&gt;Mesos&lt;/a&gt; and &lt;a href=&#34;http://kubernetes.io/&#34;&gt;Kubernetes&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I kept the course on the following, going deeper understanding the techs:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://spark.apache.org/&#34;&gt;Spark&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://cassandra.apache.org/&#34;&gt;Cassandra&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.elastic.co/&#34;&gt;Elasticsearch&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://kafka.apache.org/&#34;&gt;Kafka&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://akka.io/&#34;&gt;Akka&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.scala-lang.org/&#34;&gt;Scala&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.python.org/&#34;&gt;Python&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://scikit-learn.org/&#34;&gt;Scikit-Learn&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://pandas.pydata.org/&#34;&gt;Pandas&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;New learning items this year:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://keras.io/&#34;&gt;Keras&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.tensorflow.org/&#34;&gt;Tensorflow&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://jupyter.org/&#34;&gt;Jupyter&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://toree.apache.org/&#34;&gt;Toree&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.docker.com/&#34;&gt;Docker&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Public Speaking&lt;/p&gt;
+&lt;p&gt;It was an incredible year for speaking, and i was honoured to present at some really great events on some of my lifetime passions/topics:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Data Science&lt;/li&gt;
+&lt;li&gt;Big Data&lt;/li&gt;
+&lt;li&gt;Distributed Computing&lt;/li&gt;
+&lt;li&gt;Cloud Computing&lt;/li&gt;
+&lt;li&gt;Streaming Analytics&lt;/li&gt;
+&lt;li&gt;AI and ML&lt;/li&gt;
+&lt;li&gt;Predictive APIs&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Talks, Meetups, Presentations:&lt;/p&gt;
+&lt;p&gt;In total I delivered the following during this year:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;8 webinars at Bright Talks&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.brighttalk.com/search?duration=0..&amp;amp;q=busa&amp;amp;rank=entrytime&#34;&gt;https://www.brighttalk.com/search?duration=0..&amp;amp;q=busa&amp;amp;rank=entrytime&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;8 live talks&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.papis.io/&#34;&gt;PAPIs.io&lt;/a&gt;, &lt;a href=&#34;https://www.eurocloud.org/&#34;&gt;Eurocloud&lt;/a&gt;, &lt;a href=&#34;http://conferences.oreilly.com/strata/strata-eu&#34;&gt;Strata London&lt;/a&gt;, &lt;a href=&#34;http://ai-finance.com/&#34;&gt;AI in Finance London&lt;/a&gt;, &lt;a href=&#34;https://www.bigdataspain.org/&#34;&gt;Big Data Spain&lt;/a&gt;, &lt;a href=&#34;https://www.teradata.com/innovationforum/&#34;&gt;Teradata Innovation Forum Rotterdam/Helsinky&lt;/a&gt;, &lt;a href=&#34;http://www.whitehallmedia.co.uk/bdaeurope/&#34;&gt;Big Data Analytics Amsterdam&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;1 podcasts&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.oreilly.com/ideas/understanding-predictive-analytics&#34;&gt;Understanding predictive analytics&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;4 editorials&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.oreilly.com/learning/how-to-build-an-anomaly-detection-engine-with-spark-akka-and-cassandra&#34;&gt;How to build an anomaly detection engine with Spark, Akka, and Cassandra&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.oreilly.com/ideas/clustering-geolocated-data-using-spark-and-dbscan&#34;&gt;Clustering geolocated data using Spark and DBSCAN&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.oreilly.com/ideas/the-evolution-of-advanced-analytics-in-spark&#34;&gt;The evolution of advanced analytics in Spark&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.odbms.org/2016/04/why-is-the-smack-stack-all-the-rage-lately/&#34;&gt;Why is the SMACK stack all the rage lately?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;6 video&#39;s&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/results?sp=CAI%253D&amp;amp;q=natalino+busa&#34;&gt; https://www.youtube.com/results?sp=CAI%253D&amp;amp;q=natalino+busa&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=Mm0g39R9xVU&#34;&gt;https://www.youtube.com/watch?v=Mm0g39R9xVU&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=0j2XfaHqRQ0&#34;&gt;https://www.youtube.com/watch?v=0j2XfaHqRQ0&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=w1WRk-RAkp0&#34;&gt;https://www.youtube.com/watch?v=w1WRk-RAkp0&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=IAknGMedg6U&#34;&gt;https://www.youtube.com/watch?v=IAknGMedg6U&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=WLIbMqFZmHU&#34;&gt;https://www.youtube.com/watch?v=WLIbMqFZmHU&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;3 blog posts on LinkedIn Pulse&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.linkedin.com/pulse/data-science-singularity-natalino-busa&#34;&gt;The Data Science Singularity&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.linkedin.com/pulse/containers-service-swarm-vs-kubernetes-mesos-fleet-yarn-natalino-busa&#34;&gt;Containers as a Service: Swarm vs Kubernetes vs Mesos vs Fleet vs Yarn&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.linkedin.com/pulse/analytics-cloud-natalino-busa&#34;&gt;Analytics in the Cloud&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;483 tech updates on linkedin and twitter&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;4984 followers on linkedin&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Some projects and engagements:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Big Data and Data Science Strategy in Banking, KSA&lt;/li&gt;
+&lt;li&gt;Streaming Analytics Consulting in Banking, The Netherlands&lt;/li&gt;
+&lt;li&gt;Big Data Consulting in Banking, The Netherlands&lt;/li&gt;
+&lt;li&gt;AI for Banking Services in London, UK&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Looking Forward in 2017:&lt;/p&gt;
+&lt;p&gt;The year to come is the year where Big Data, Streaming Analytics, Data Science and AI/ML will get traction and most likely be adopted by most companies in one way or another. I will be happy to provide consultancy on architectures, tools and algorithms for this new wave of data-driven products. The future is bright, I wish you all a great 2017 and the very best for you next projects!&lt;/p&gt;
+&lt;p&gt;Closing on, I would like to thank my friends Carlo Canova, Antonios Zagaris, Ghiath Alkadi, Giuseppe Grillo, Enith Vlooswijk, my lovely kids Ryan, Nemo and Maya, my family and friends, Have a great 2017, everybody!&lt;/p&gt;
+</description>
+    </item>
     
   </channel>
 </rss>
