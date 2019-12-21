@@ -553,6 +553,10 @@
     <h2><a href="/post/datafaucet-aggregate/">Aggregating Dataframes</a></h2>
     <div class="article-style">
       
+      Aggregations are an important step while processing dataframes and tabular data in general. And therefore, they should be as simple as possible to implement. Some notable data aggregation semantics are provided by pandas, spark and the SQL language.
+When designing an aggregation API method, the following characteristics make in my opinion a good aggregation method.
+ easily perform aggregation on a column or a set of columns easily perform multiple aggregation functions on the same columns selectively perform differently aggregations on different columns  As an nice to have to this list, it would be nice to apply aggregation functions by passing the function name as a string.
+      
     </div>
   </div>
   
