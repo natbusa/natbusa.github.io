@@ -5,7 +5,7 @@
     <link>/authors/</link>
       <atom:link href="/authors/index.xml" rel="self" type="application/rss+xml" />
     <description>Authors</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>2019</copyright><lastBuildDate>Mon, 11 Nov 2019 16:28:27 +0800</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>2019</copyright><lastBuildDate>Tue, 24 Dec 2019 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Authors</title>
@@ -15,7 +15,7 @@
     <item>
       <title></title>
       <link>/authors/natbusa/</link>
-      <pubDate>Mon, 11 Nov 2019 16:28:27 +0800</pubDate>
+      <pubDate>Tue, 24 Dec 2019 00:00:00 +0000</pubDate>
       <guid>/authors/natbusa/</guid>
       <description>&lt;p&gt;Senior Director of Data Engineering, Science, Analytics, Reporting, AI,  and Big Data. Managing all data related activities &amp;amp; teams. Reporting directly to CFO/CEO.&lt;/p&gt;
 &lt;p&gt;Natalino Busa is skilled at defining, designing and implementing custom big/fast data solutions for data-driven applications such as predictive analytics, personalized marketing, fraud detection and business event monitoring. Proficient in porting traditional ETL to Open Source data solutions.&lt;/p&gt;
