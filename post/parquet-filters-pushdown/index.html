@@ -29,7 +29,7 @@
     
   
   <meta name="description" content="import datafaucet as dfc  Datafaucet is a productivity framework for ETL, ML application. Simplifying some of the common activities which are typical in Data pipeline such as project scaffolding, data ingesting, start schema generation, forecasting etc.
-Loading and Saving Parquet Data dfc.project.load(&#39;minimal&#39;)   [datafaucet] NOTICE parquet.ipynb:engine:__init__ | Connecting to spark master: local[*]  dfc.metadata.profile()  Filter and projections Filters push down on parquet files The following show how to selectively read files on parquet files (with partitions)">
+Loading and Saving Parquet Data dfc.project.load(&#39;minimal&#39;)   [datafaucet] NOTICE parquet.ipynb:engine:__init__ | Connecting to spark master: local[*] [datafaucet] NOTICE parquet.ipynb:engine:__init__ | Engine context spark:2.4.4 successfully started &lt;datafaucet.project.Project at 0x7ff5c84d3748&gt;  dfc.metadata.profile()  profile: minimal variables: {} engine: type: spark master: local[*] jobname: timezone: naive submit: jars: [] packages: [] pyfiles: files: repositories: conf: providers: local: service: file path: data resources: {} logging: level: info stdout: true file: datafaucet.">
 
   
   <link rel="alternate" hreflang="en-us" href="/post/parquet-filters-pushdown/">
@@ -226,7 +226,7 @@ Loading and Saving Parquet Data dfc.project.load(&#39;minimal&#39;)   [datafauce
   <meta property="og:url" content="/post/parquet-filters-pushdown/">
   <meta property="og:title" content="Parquet Pushdown Filters | Natalino Busa">
   <meta property="og:description" content="import datafaucet as dfc  Datafaucet is a productivity framework for ETL, ML application. Simplifying some of the common activities which are typical in Data pipeline such as project scaffolding, data ingesting, start schema generation, forecasting etc.
-Loading and Saving Parquet Data dfc.project.load(&#39;minimal&#39;)   [datafaucet] NOTICE parquet.ipynb:engine:__init__ | Connecting to spark master: local[*]  dfc.metadata.profile()  Filter and projections Filters push down on parquet files The following show how to selectively read files on parquet files (with partitions)"><meta property="og:image" content="/img/icon-192.png">
+Loading and Saving Parquet Data dfc.project.load(&#39;minimal&#39;)   [datafaucet] NOTICE parquet.ipynb:engine:__init__ | Connecting to spark master: local[*] [datafaucet] NOTICE parquet.ipynb:engine:__init__ | Engine context spark:2.4.4 successfully started &lt;datafaucet.project.Project at 0x7ff5c84d3748&gt;  dfc.metadata.profile()  profile: minimal variables: {} engine: type: spark master: local[*] jobname: timezone: naive submit: jars: [] packages: [] pyfiles: files: repositories: conf: providers: local: service: file path: data resources: {} logging: level: info stdout: true file: datafaucet."><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
     
@@ -278,7 +278,7 @@ Loading and Saving Parquet Data dfc.project.load(&#39;minimal&#39;)   [datafauce
       "url": "/img/icon-512.png"
     }
   },
-  "description": "import datafaucet as dfc  Datafaucet is a productivity framework for ETL, ML application. Simplifying some of the common activities which are typical in Data pipeline such as project scaffolding, data ingesting, start schema generation, forecasting etc.\nLoading and Saving Parquet Data dfc.project.load('minimal')   [datafaucet] NOTICE parquet.ipynb:engine:__init__ | Connecting to spark master: local[*]  dfc.metadata.profile()  Filter and projections Filters push down on parquet files The following show how to selectively read files on parquet files (with partitions)"
+  "description": "import datafaucet as dfc  Datafaucet is a productivity framework for ETL, ML application. Simplifying some of the common activities which are typical in Data pipeline such as project scaffolding, data ingesting, start schema generation, forecasting etc.\nLoading and Saving Parquet Data dfc.project.load('minimal')   [datafaucet] NOTICE parquet.ipynb:engine:__init__ | Connecting to spark master: local[*] [datafaucet] NOTICE parquet.ipynb:engine:__init__ | Engine context spark:2.4.4 successfully started \u0026lt;datafaucet.project.Project at 0x7ff5c84d3748\u0026gt;  dfc.metadata.profile()  profile: minimal variables: {} engine: type: spark master: local[*] jobname: timezone: naive submit: jars: [] packages: [] pyfiles: files: repositories: conf: providers: local: service: file path: data resources: {} logging: level: info stdout: true file: datafaucet."
 }
 </script>
 
@@ -628,7 +628,7 @@ Loading and Saving Parquet Data dfc.project.load(&#39;minimal&#39;)   [datafauce
   
   <span class="middot-divider"></span>
   <span class="article-reading-time">
-    1 min read
+    2 min read
   </span>
   
 
@@ -678,8 +678,40 @@ Loading and Saving Parquet Data dfc.project.load(&#39;minimal&#39;)   [datafauce
 <pre><code class="language-python">dfc.project.load('minimal')
 </code></pre>
 <pre><code> [datafaucet] NOTICE parquet.ipynb:engine:__init__ | Connecting to spark master: local[*]
+ [datafaucet] NOTICE parquet.ipynb:engine:__init__ | Engine context spark:2.4.4 successfully started
+
+
+
+
+
+&lt;datafaucet.project.Project at 0x7ff5c84d3748&gt;
 </code></pre>
 <pre><code class="language-python">dfc.metadata.profile()
+</code></pre>
+<pre><code>profile: minimal
+variables: {}
+engine:
+    type: spark
+    master: local[*]
+    jobname:
+    timezone: naive
+    submit:
+        jars: []
+        packages: []
+        pyfiles:
+        files:
+        repositories:
+        conf:
+providers:
+    local:
+        service: file
+        path: data
+resources: {}
+logging:
+    level: info
+    stdout: true
+    file: datafaucet.log
+    kafka: []
 </code></pre>
 <h3 id="filter-and-projections-filters-push-down-on-parquet-files">Filter and projections Filters push down on parquet files</h3>
 <p>The following show how to selectively read files on parquet files (with partitions)</p>
@@ -687,11 +719,115 @@ Loading and Saving Parquet Data dfc.project.load(&#39;minimal&#39;)   [datafauce
 <pre><code class="language-python">df = dfc.range(10000).cols.create('g').randchoice([0,1,2,3])
 df.cols.groupby('g').agg('count').data.grid()
 </code></pre>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+<pre><code>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+</code></pre>
+<p></style></p>
+<table>
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>g</th>
+      <th>id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>0</td>
+      <td>2488</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>1</td>
+      <td>2488</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>3</td>
+      <td>2632</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>2</td>
+      <td>2392</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 <h4 id="save-data-as-parquet-objects">Save data as parquet objects</h4>
 <pre><code class="language-python">df.repartition('g').save('local', 'groups.parquet');
 </code></pre>
+<pre><code> [datafaucet] INFO parquet.ipynb:engine:save_log | save
+</code></pre>
 <pre><code class="language-python">dfc.list('data/save/groups.parquet').data.grid()
 </code></pre>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+<pre><code>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+</code></pre>
+<p></style></p>
+<table>
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>g=2</td>
+      <td>DIRECTORY</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>g=1</td>
+      <td>DIRECTORY</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>g=3</td>
+      <td>DIRECTORY</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>g=0</td>
+      <td>DIRECTORY</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>_SUCCESS</td>
+      <td>FILE</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>._SUCCESS.crc</td>
+      <td>FILE</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 <h4 id="read-data-parquet-objects-with-pushdown-filters">Read data parquet objects (with pushdown filters)</h4>
 <pre><code class="language-python">spark = dfc.engine().context
 </code></pre>
@@ -700,14 +836,36 @@ df.cols.groupby('g').agg('count').data.grid()
 <pre><code class="language-python">### No pushdown on the physical plan
 df.explain()
 </code></pre>
+<pre><code>== Physical Plan ==
+*(1) FileScan parquet [id#91L,g#92] Batched: true, Format: Parquet, Location: InMemoryFileIndex[file:/home/natbusa/Projects/datafaucet/examples/tutorial/data/save/groups.parquet], PartitionCount: 4, PartitionFilters: [], PushedFilters: [], ReadSchema: struct&lt;id:bigint&gt;
+</code></pre>
 <pre><code class="language-python">### Pushdown only column selection
 df.groupby('g').count().explain()
+</code></pre>
+<pre><code>== Physical Plan ==
+*(2) HashAggregate(keys=[g#92], functions=[count(1)])
++- Exchange hashpartitioning(g#92, 200)
+   +- *(1) HashAggregate(keys=[g#92], functions=[partial_count(1)])
+      +- *(1) FileScan parquet [g#92] Batched: true, Format: Parquet, Location: InMemoryFileIndex[file:/home/natbusa/Projects/datafaucet/examples/tutorial/data/save/groups.parquet], PartitionCount: 4, PartitionFilters: [], PushedFilters: [], ReadSchema: struct&lt;&gt;
 </code></pre>
 <pre><code class="language-python">
 df.filter('id&gt;100').explain()
 </code></pre>
+<pre><code>== Physical Plan ==
+*(1) Project [id#91L, g#92]
++- *(1) Filter (isnotnull(id#91L) &amp;&amp; (id#91L &gt; 100))
+   +- *(1) FileScan parquet [id#91L,g#92] Batched: true, Format: Parquet, Location: InMemoryFileIndex[file:/home/natbusa/Projects/datafaucet/examples/tutorial/data/save/groups.parquet], PartitionCount: 4, PartitionFilters: [], PushedFilters: [IsNotNull(id), GreaterThan(id,100)], ReadSchema: struct&lt;id:bigint&gt;
+</code></pre>
 <pre><code class="language-python">
 df.filter('id&gt;100 and g=1').groupby('g').count().explain()
+</code></pre>
+<pre><code>== Physical Plan ==
+*(2) HashAggregate(keys=[g#92], functions=[count(1)])
++- Exchange hashpartitioning(g#92, 200)
+   +- *(1) HashAggregate(keys=[g#92], functions=[partial_count(1)])
+      +- *(1) Project [g#92]
+         +- *(1) Filter (isnotnull(id#91L) &amp;&amp; (id#91L &gt; 100))
+            +- *(1) FileScan parquet [id#91L,g#92] Batched: true, Format: Parquet, Location: InMemoryFileIndex[file:/home/natbusa/Projects/datafaucet/examples/tutorial/data/save/groups.parquet], PartitionCount: 1, PartitionFilters: [isnotnull(g#92), (g#92 = 1)], PushedFilters: [IsNotNull(id), GreaterThan(id,100)], ReadSchema: struct&lt;id:bigint&gt;
 </code></pre>
 
     </div>
