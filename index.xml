@@ -30,7 +30,7 @@
 
 
 
-&amp;lt;datafaucet.project.Project at 0x7ff5c84d3748&amp;gt;
+&amp;lt;datafaucet.project.Project at 0x7f6e3bfe9630&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;dfc.metadata.profile()
 &lt;/code&gt;&lt;/pre&gt;
@@ -91,22 +91,22 @@ df.cols.groupby(&#39;g&#39;).agg(&#39;count&#39;).data.grid()
     &lt;tr&gt;
       &lt;td&gt;0&lt;/td&gt;
       &lt;td&gt;0&lt;/td&gt;
-      &lt;td&gt;2488&lt;/td&gt;
+      &lt;td&gt;2504&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;td&gt;1&lt;/td&gt;
       &lt;td&gt;1&lt;/td&gt;
-      &lt;td&gt;2488&lt;/td&gt;
+      &lt;td&gt;2320&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;td&gt;2&lt;/td&gt;
       &lt;td&gt;3&lt;/td&gt;
-      &lt;td&gt;2632&lt;/td&gt;
+      &lt;td&gt;2640&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;td&gt;3&lt;/td&gt;
       &lt;td&gt;2&lt;/td&gt;
-      &lt;td&gt;2392&lt;/td&gt;
+      &lt;td&gt;2536&lt;/td&gt;
     &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
@@ -177,41 +177,161 @@ df.cols.groupby(&#39;g&#39;).agg(&#39;count&#39;).data.grid()
 &lt;h4 id=&#34;read-data-parquet-objects-with-pushdown-filters&#34;&gt;Read data parquet objects (with pushdown filters)&lt;/h4&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;spark = dfc.engine().context
 &lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;df = spark.read.load(&#39;data/save/groups.parquet&#39;)
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;df = dfc.load(&#39;data/save/groups.parquet&#39;)
 &lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;### No pushdown on the physical plan
-df.explain()
+&lt;pre&gt;&lt;code&gt; [datafaucet] INFO parquet.ipynb:engine:load_log | load
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;df.explain()
 &lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;== Physical Plan ==
 *(1) FileScan parquet [id#91L,g#92] Batched: true, Format: Parquet, Location: InMemoryFileIndex[file:/home/natbusa/Projects/datafaucet/examples/tutorial/data/save/groups.parquet], PartitionCount: 4, PartitionFilters: [], PushedFilters: [], ReadSchema: struct&amp;lt;id:bigint&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def explainSource(obj):
+    for s in obj._jdf.queryExecution().simpleString().split(&#39;\n&#39;):
+        if &#39;FileScan&#39; in s:
+            params = [
+                &#39;Batched&#39;, 
+                &#39;Format&#39;, 
+                &#39;Location&#39;,
+                &#39;PartitionCount&#39;, 
+                &#39;PartitionFilters&#39;, 
+                &#39;PushedFilters&#39;,
+                &#39;ReadSchema&#39;]
+            
+
+            res = {}
+
+            first, _, rest = s.partition(f&#39;{params[0]}:&#39;)
+
+            for i in range(len(params[1:])):
+                first, _, rest = rest.partition(f&#39;{params[i+1]}:&#39;)
+                res[params[i]]=first[1:-2]
+
+            res[params[-1]]=rest[1:]
+            
+
+            del res[&#39;Location&#39;]
+            
+            return dfc.yaml.YamlDict(res)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;### No pushdown on the physical plan
+
+explainSource(df)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;Batched: &#39;true&#39;
+Format: Parquet
+PartitionCount: &#39;4&#39;
+PartitionFilters: &#39;[]&#39;
+PushedFilters: &#39;[]&#39;
+ReadSchema: struct&amp;lt;id:bigint&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;### Pushdown only column selection
-df.groupby(&#39;g&#39;).count().explain()
+res = df.groupby(&#39;g&#39;).count()
+explainSource(res)
 &lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;== Physical Plan ==
-*(2) HashAggregate(keys=[g#92], functions=[count(1)])
-+- Exchange hashpartitioning(g#92, 200)
-   +- *(1) HashAggregate(keys=[g#92], functions=[partial_count(1)])
-      +- *(1) FileScan parquet [g#92] Batched: true, Format: Parquet, Location: InMemoryFileIndex[file:/home/natbusa/Projects/datafaucet/examples/tutorial/data/save/groups.parquet], PartitionCount: 4, PartitionFilters: [], PushedFilters: [], ReadSchema: struct&amp;lt;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
-df.filter(&#39;id&amp;gt;100&#39;).explain()
-&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;== Physical Plan ==
-*(1) Project [id#91L, g#92]
-+- *(1) Filter (isnotnull(id#91L) &amp;amp;&amp;amp; (id#91L &amp;gt; 100))
-   +- *(1) FileScan parquet [id#91L,g#92] Batched: true, Format: Parquet, Location: InMemoryFileIndex[file:/home/natbusa/Projects/datafaucet/examples/tutorial/data/save/groups.parquet], PartitionCount: 4, PartitionFilters: [], PushedFilters: [IsNotNull(id), GreaterThan(id,100)], ReadSchema: struct&amp;lt;id:bigint&amp;gt;
+&lt;pre&gt;&lt;code&gt;Batched: &#39;true&#39;
+Format: Parquet
+PartitionCount: &#39;4&#39;
+PartitionFilters: &#39;[]&#39;
+PushedFilters: &#39;[]&#39;
+ReadSchema: struct&amp;lt;&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
-df.filter(&#39;id&amp;gt;100 and g=1&#39;).groupby(&#39;g&#39;).count().explain()
+res = df.filter(&#39;id&amp;gt;100&#39;)
+explainSource(res)
 &lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;== Physical Plan ==
-*(2) HashAggregate(keys=[g#92], functions=[count(1)])
-+- Exchange hashpartitioning(g#92, 200)
-   +- *(1) HashAggregate(keys=[g#92], functions=[partial_count(1)])
-      +- *(1) Project [g#92]
-         +- *(1) Filter (isnotnull(id#91L) &amp;amp;&amp;amp; (id#91L &amp;gt; 100))
-            +- *(1) FileScan parquet [id#91L,g#92] Batched: true, Format: Parquet, Location: InMemoryFileIndex[file:/home/natbusa/Projects/datafaucet/examples/tutorial/data/save/groups.parquet], PartitionCount: 1, PartitionFilters: [isnotnull(g#92), (g#92 = 1)], PushedFilters: [IsNotNull(id), GreaterThan(id,100)], ReadSchema: struct&amp;lt;id:bigint&amp;gt;
+&lt;pre&gt;&lt;code&gt;Batched: &#39;true&#39;
+Format: Parquet
+PartitionCount: &#39;4&#39;
+PartitionFilters: &#39;[]&#39;
+PushedFilters: &#39;[IsNotNull(id), GreaterThan(id,100)]&#39;
+ReadSchema: struct&amp;lt;id:bigint&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+res = df.filter(&#39;id&amp;gt;100 and g=1&#39;).groupby(&#39;g&#39;).count()
+explainSource(res)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;Batched: &#39;true&#39;
+Format: Parquet
+PartitionCount: &#39;1&#39;
+PartitionFilters: &#39;[isnotnull(g#92), (g#92 = 1)]&#39;
+PushedFilters: &#39;[IsNotNull(id), GreaterThan(id,100)]&#39;
+ReadSchema: struct&amp;lt;id:bigint&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+res = df.filter(&#39;id&amp;gt;100 and (g=2 or g=3)&#39;).groupby(&#39;g&#39;).count()
+explainSource(res)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;Batched: &#39;true&#39;
+Format: Parquet
+PartitionCount: &#39;2&#39;
+PartitionFilters: &#39;[((g#92 = 2) || (g#92 = 3))]&#39;
+PushedFilters: &#39;[IsNotNull(id), GreaterThan(id,100)]&#39;
+ReadSchema: struct&amp;lt;id:bigint&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+res = df.filter(&#39;id&amp;gt;100 and g&amp;gt;1&#39;).groupby(&#39;g&#39;).count()
+explainSource(res)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;Batched: &#39;true&#39;
+Format: Parquet
+PartitionCount: &#39;2&#39;
+PartitionFilters: &#39;[isnotnull(g#92), (g#92 &amp;gt; 1)]&#39;
+PushedFilters: &#39;[IsNotNull(id), GreaterThan(id,100)]&#39;
+ReadSchema: struct&amp;lt;id:bigint&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+res = df.filter(&#39;id&amp;gt;100 and g&amp;gt;1&#39;).filter(&#39;id&amp;lt;500 and g=2&#39;).groupby(&#39;g&#39;).count()
+explainSource(res)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;Batched: &#39;true&#39;
+Format: Parquet
+PartitionCount: &#39;1&#39;
+PartitionFilters: &#39;[isnotnull(g#92), (g#92 &amp;gt; 1), (g#92 = 2)]&#39;
+PushedFilters: &#39;[IsNotNull(id), GreaterThan(id,100), LessThan(id,500)]&#39;
+ReadSchema: struct&amp;lt;id:bigint&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;when-pushdown-filters-are-not-applied&#34;&gt;When pushdown filters are NOT applied.&lt;/h3&gt;
+&lt;h4 id=&#34;avoid-caching-and-actions-of-read-data&#34;&gt;Avoid caching and actions of read data&lt;/h4&gt;
+&lt;p&gt;Avoid cache(), count() or other action on data, as they will act as a &amp;ldquo;wall&amp;rdquo; for filter operations to be pushed down the parquet reader. On the contrary, registering the dataframe as a temorary table is OK. Please be aware that these operation could be hidden in your function call stack, so be always sure that the filters are as close as possible to the read operation.&lt;/p&gt;
+&lt;h4 id=&#34;spark-will-only-read-the-same-data-once-per-session&#34;&gt;Spark will only read the same data once per session&lt;/h4&gt;
+&lt;p&gt;Once a parquet file has been read in a cached/unfiltered way, any subsequent read operation will fail to push down the filters, as spark assumes that the data has already been loaded once.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;df = dfc.load(&#39;data/save/groups.parquet&#39;)
+df.cache()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt; [datafaucet] INFO parquet.ipynb:engine:load_log | load
+
+
+
+
+
+DataFrame[id: bigint, g: int]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+res = df.filter(&#39;id&amp;gt;100 and g=1&#39;).groupby(&#39;g&#39;).count()
+explainSource(res)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;Batched: &#39;true&#39;
+Format: Parquet
+PartitionCount: &#39;4&#39;
+PartitionFilters: &#39;[]&#39;
+PushedFilters: &#39;[]&#39;
+ReadSchema: struct&amp;lt;id:bigint&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+df = dfc.load(&#39;data/save/groups.parquet&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt; [datafaucet] INFO parquet.ipynb:engine:load_log | load
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;res = df.filter(&#39;id&amp;gt;100 and g=1&#39;).groupby(&#39;g&#39;).count()
+explainSource(res)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;Batched: &#39;true&#39;
+Format: Parquet
+PartitionCount: &#39;4&#39;
+PartitionFilters: &#39;[]&#39;
+PushedFilters: &#39;[]&#39;
+ReadSchema: struct&amp;lt;id:bigint&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
