@@ -28,9 +28,8 @@
   
     
   
-  <meta name="description" content="Aggregations are an important step while processing dataframes and tabular data in general. And therefore, they should be as simple as possible to implement. Some notable data aggregation semantics are provided by pandas, spark and the SQL language.
-When designing an aggregation API method, the following characteristics make in my opinion a good aggregation method.
- easily perform aggregation on a column or a set of columns easily perform multiple aggregation functions on the same columns selectively perform differently aggregations on different columns  As an nice to have to this list, it would be nice to apply aggregation functions by passing the function name as a string.">
+  <meta name="description" content="Getting started Let&#39;s start spark using datafaucet.
+import datafaucet as dfc  # let&#39;s start the engine dfc.engine(&#39;spark&#39;)  &lt;datafaucet.spark.engine.SparkEngine at 0x7fbdb66f2128&gt;  # expose the engine context spark = dfc.context()  Generating Data df = spark.range(100)  df = (df .cols.create(&#39;g&#39;).randint(0,3) .cols.create(&#39;n&#39;).randchoice([&#39;Stacy&#39;, &#39;Sandra&#39;]) .cols.create(&#39;x&#39;).randint(0,100) .cols.create(&#39;y&#39;).randint(0,100) )  df.data.grid(5)   .dataframe tbody tr th:only-of-type { vertical-align: middle; } .dataframe tbody tr th { vertical-align: top; } .dataframe thead th { text-align: right; }">
 
   
   <link rel="alternate" hreflang="en-us" href="/post/datafaucet-aggregate/">
@@ -225,16 +224,13 @@ When designing an aggregation API method, the following characteristics make in 
   
   <meta property="og:site_name" content="Natalino Busa">
   <meta property="og:url" content="/post/datafaucet-aggregate/">
-  <meta property="og:title" content="Aggregating Dataframes | Natalino Busa">
-  <meta property="og:description" content="Aggregations are an important step while processing dataframes and tabular data in general. And therefore, they should be as simple as possible to implement. Some notable data aggregation semantics are provided by pandas, spark and the SQL language.
-When designing an aggregation API method, the following characteristics make in my opinion a good aggregation method.
- easily perform aggregation on a column or a set of columns easily perform multiple aggregation functions on the same columns selectively perform differently aggregations on different columns  As an nice to have to this list, it would be nice to apply aggregation functions by passing the function name as a string."><meta property="og:image" content="/img/icon-192.png">
+  <meta property="og:title" content=" | Natalino Busa">
+  <meta property="og:description" content="Getting started Let&#39;s start spark using datafaucet.
+import datafaucet as dfc  # let&#39;s start the engine dfc.engine(&#39;spark&#39;)  &lt;datafaucet.spark.engine.SparkEngine at 0x7fbdb66f2128&gt;  # expose the engine context spark = dfc.context()  Generating Data df = spark.range(100)  df = (df .cols.create(&#39;g&#39;).randint(0,3) .cols.create(&#39;n&#39;).randchoice([&#39;Stacy&#39;, &#39;Sandra&#39;]) .cols.create(&#39;x&#39;).randint(0,100) .cols.create(&#39;y&#39;).randint(0,100) )  df.data.grid(5)   .dataframe tbody tr th:only-of-type { vertical-align: middle; } .dataframe tbody tr th { vertical-align: top; } .dataframe thead th { text-align: right; }"><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
     
-      <meta property="article:published_time" content="2019-11-11T16:28:27&#43;08:00">
     
-    <meta property="article:modified_time" content="2019-12-22T01:51:43&#43;08:00">
   
 
   
@@ -262,10 +258,10 @@ When designing an aggregation API method, the following characteristics make in 
     "@type": "WebPage",
     "@id": "/post/datafaucet-aggregate/"
   },
-  "headline": "Aggregating Dataframes",
+  "headline": "",
   
-  "datePublished": "2019-11-11T16:28:27+08:00",
-  "dateModified": "2019-12-22T01:51:43+08:00",
+  "datePublished": "0001-01-01T00:00:00Z",
+  "dateModified": "0001-01-01T00:00:00Z",
   
   "author": {
     "@type": "Person",
@@ -280,7 +276,7 @@ When designing an aggregation API method, the following characteristics make in 
       "url": "/img/icon-512.png"
     }
   },
-  "description": "Aggregations are an important step while processing dataframes and tabular data in general. And therefore, they should be as simple as possible to implement. Some notable data aggregation semantics are provided by pandas, spark and the SQL language.\nWhen designing an aggregation API method, the following characteristics make in my opinion a good aggregation method.\n easily perform aggregation on a column or a set of columns easily perform multiple aggregation functions on the same columns selectively perform differently aggregations on different columns  As an nice to have to this list, it would be nice to apply aggregation functions by passing the function name as a string."
+  "description": "Getting started Let's start spark using datafaucet.\nimport datafaucet as dfc  # let's start the engine dfc.engine('spark')  \u0026lt;datafaucet.spark.engine.SparkEngine at 0x7fbdb66f2128\u0026gt;  # expose the engine context spark = dfc.context()  Generating Data df = spark.range(100)  df = (df .cols.create('g').randint(0,3) .cols.create('n').randchoice(['Stacy', 'Sandra']) .cols.create('x').randint(0,100) .cols.create('y').randint(0,100) )  df.data.grid(5)   .dataframe tbody tr th:only-of-type { vertical-align: middle; } .dataframe tbody tr th { vertical-align: top; } .dataframe thead th { text-align: right; }"
 }
 </script>
 
@@ -324,7 +320,7 @@ When designing an aggregation API method, the following characteristics make in 
 
 
 
-  <title>Aggregating Dataframes | Natalino Busa</title>
+  <title> | Natalino Busa</title>
 
 </head>
 
@@ -587,7 +583,7 @@ When designing an aggregation API method, the following characteristics make in 
   
   
 <div class="article-container pt-3">
-  <h1>Aggregating Dataframes</h1>
+  <h1></h1>
 
   
 
@@ -599,29 +595,14 @@ When designing an aggregation API method, the following characteristics make in 
 
   
   
-  
-  
-  <div>
-    
-
-
-
-  
-  <span><a href="/authors/natbusa/">Natalino Busa</a></span>
-
-  </div>
-  
-  
 
   
   <span class="article-date">
     
     
       
-          Last updated on
-      
     
-    2019-12-22
+    0001-01-01
   </span>
   
 
@@ -630,7 +611,7 @@ When designing an aggregation API method, the following characteristics make in 
   
   <span class="middot-divider"></span>
   <span class="article-reading-time">
-    10 min read
+    9 min read
   </span>
   
 
@@ -642,10 +623,6 @@ When designing an aggregation API method, the following characteristics make in 
   
 
   
-  
-  <span class="middot-divider"></span>
-  <span class="article-categories">
-    <i class="fas fa-folder mr-1"></i><a href="/categories/datafaucet/">datafaucet</a></span>
   
 
 </div>
@@ -673,30 +650,16 @@ When designing an aggregation API method, the following characteristics make in 
   <div class="article-container">
 
     <div class="article-style">
-      <p>Aggregations are an important step while processing dataframes and tabular data
-in general. And therefore, they should be as simple as possible to implement.
-Some notable data aggregation semantics are provided by pandas, spark and the SQL
-language.</p>
-<p>When designing an aggregation API method, the following characteristics make in
-my opinion a good aggregation method.</p>
-<ul>
-<li>easily perform aggregation on a column or a set of columns</li>
-<li>easily perform multiple aggregation functions on the same columns</li>
-<li>selectively perform differently aggregations on different columns</li>
-</ul>
-<p>As an nice to have to this list, it would be nice to apply aggregation functions
-by passing the function name as a string. A good aggregation method should allow
-all the above with minimal amount of code required.</p>
-<h2 id="getting-started">Getting started</h2>
+      <h2 id="getting-started">Getting started</h2>
 <p>Let's start spark using datafaucet.</p>
 <pre><code class="language-python">import datafaucet as dfc
 </code></pre>
-<pre><code class="language-python">
+<pre><code class="language-python"># let's start the engine
 dfc.engine('spark')
 </code></pre>
 <pre><code>&lt;datafaucet.spark.engine.SparkEngine at 0x7fbdb66f2128&gt;
 </code></pre>
-<pre><code class="language-python">
+<pre><code class="language-python"># expose the engine context
 spark  = dfc.context()
 </code></pre>
 <h2 id="generating-data">Generating Data</h2>
@@ -1015,7 +978,7 @@ agg
 </code></pre>
 <pre><code>FrozenList(['g', None])
 </code></pre>
-<pre><code class="language-python">
+<pre><code class="language-python"># for example these are the value from the first level of the index
 agg.index.get_level_values(0)
 </code></pre>
 <pre><code>Int64Index([0, 0, 1, 1, 2, 2], dtype='int64', name='g')
@@ -1025,7 +988,7 @@ agg.index.get_level_values(0)
 for (name, lvl) in zip(levels, range(len(levels))):
     agg[name or f'_{lvl}'] = agg.index.get_level_values(lvl)
 </code></pre>
-<pre><code class="language-python">
+<pre><code class="language-python">#now the index is standard columns, drop the index
 agg.reset_index(inplace=True, drop=True)
 agg
 </code></pre>
@@ -1503,7 +1466,7 @@ solution above is available, with a few extras. See below the examples</p>
 aggregations. The aggregation api is always in the form:</p>
 <p><code>df.cols.get(...).groupby(...).agg(...)</code></p>
 <p>Alternativaly, you can <code>find</code> instead of <code>get</code></p>
-<pre><code class="language-python">
+<pre><code class="language-python"># simple aggregation by name
 d = df.cols.get('x').agg('distinct')
 d.data.grid()
 </code></pre>
@@ -1536,7 +1499,7 @@ d.data.grid()
   </tbody>
 </table>
 </div>
-<pre><code class="language-python">
+<pre><code class="language-python"># simple aggregation (multiple) by name
 d = df.cols.get('x').agg(['distinct', 'avg'])
 d.data.grid()
 </code></pre>
@@ -1571,7 +1534,7 @@ d.data.grid()
   </tbody>
 </table>
 </div>
-<pre><code class="language-python">
+<pre><code class="language-python"># simple aggregation (multiple) by name (stacked)
 d = df.cols.get('x').agg(['distinct', 'avg'], stack=True)
 d.data.grid()
 </code></pre>
@@ -1608,7 +1571,7 @@ d.data.grid()
   </tbody>
 </table>
 </div>
-<pre><code class="language-python">
+<pre><code class="language-python"># simple aggregation (multiple) by name (stacked, custom index name)
 d = df.cols.get('x').agg(['distinct', 'avg'], stack='colname')
 d.data.grid()
 </code></pre>
@@ -1645,7 +1608,7 @@ d.data.grid()
   </tbody>
 </table>
 </div>
-<pre><code class="language-python">
+<pre><code class="language-python"># simple aggregation (multiple) by name and function
 d = df.cols.get('x').agg(['distinct', F.min, F.max, 'avg'])
 d.data.grid()
 </code></pre>
@@ -1684,7 +1647,7 @@ d.data.grid()
   </tbody>
 </table>
 </div>
-<pre><code class="language-python">
+<pre><code class="language-python"># multiple aggregation by name and function
 d = df.cols.get('x', 'y').agg(['distinct', F.min, F.max, 'avg'])
 d.data.grid()
 </code></pre>
@@ -1731,7 +1694,7 @@ d.data.grid()
   </tbody>
 </table>
 </div>
-<pre><code class="language-python">
+<pre><code class="language-python"># multiple aggregation (multiple) by name and function
 d = df.cols.get('x', 'y').agg({
     'x':['distinct', F.min], 
     'y':['distinct', 'max']})
@@ -1777,7 +1740,7 @@ d.data.grid()
   </tbody>
 </table>
 </div>
-<pre><code class="language-python">
+<pre><code class="language-python"># multiple aggregation (multiple) by name and function (stacked)
 d = df.cols.get('x', 'y').agg({
     'x':['distinct', F.min], 
     'y':['distinct', 'max']}, stack=True)
@@ -1825,7 +1788,7 @@ d.data.grid()
   </tbody>
 </table>
 </div>
-<pre><code class="language-python">
+<pre><code class="language-python"># grouped by, multiple aggregation (multiple) by name and function (stacked)
 d = df.cols.get('x', 'y').groupby('g','n').agg({
     'x':['distinct', F.min], 
     'y':['distinct', 'max']}, stack=True)
@@ -2006,16 +1969,6 @@ d.data.grid()
 
 
 
-<div class="article-tags">
-  
-  <a class="badge badge-light" href="/tags/analytics/">analytics</a>
-  
-  <a class="badge badge-light" href="/tags/pyspark/">pyspark</a>
-  
-  <a class="badge badge-light" href="/tags/pandas/">pandas</a>
-  
-</div>
-
 
 
 <div class="share-box" aria-hidden="true">
@@ -2029,7 +1982,7 @@ d.data.grid()
       
       
       <li>
-        <a href="https://twitter.com/intent/tweet?url=/post/datafaucet-aggregate/&amp;text=Aggregating%20Dataframes" target="_blank" rel="noopener" class="share-btn-twitter">
+        <a href="https://twitter.com/intent/tweet?url=/post/datafaucet-aggregate/&amp;text=" target="_blank" rel="noopener" class="share-btn-twitter">
           <i class="fab fa-twitter"></i>
         </a>
       </li>
@@ -2042,7 +1995,7 @@ d.data.grid()
       
       
       <li>
-        <a href="https://www.facebook.com/sharer.php?u=/post/datafaucet-aggregate/&amp;t=Aggregating%20Dataframes" target="_blank" rel="noopener" class="share-btn-facebook">
+        <a href="https://www.facebook.com/sharer.php?u=/post/datafaucet-aggregate/&amp;t=" target="_blank" rel="noopener" class="share-btn-facebook">
           <i class="fab fa-facebook-f"></i>
         </a>
       </li>
@@ -2055,7 +2008,7 @@ d.data.grid()
       
       
       <li>
-        <a href="mailto:?subject=Aggregating%20Dataframes&amp;body=/post/datafaucet-aggregate/" target="_blank" rel="noopener" class="share-btn-email">
+        <a href="mailto:?subject=&amp;body=/post/datafaucet-aggregate/" target="_blank" rel="noopener" class="share-btn-email">
           <i class="fas fa-envelope"></i>
         </a>
       </li>
@@ -2068,7 +2021,7 @@ d.data.grid()
       
       
       <li>
-        <a href="https://www.linkedin.com/shareArticle?url=/post/datafaucet-aggregate/&amp;title=Aggregating%20Dataframes" target="_blank" rel="noopener" class="share-btn-linkedin">
+        <a href="https://www.linkedin.com/shareArticle?url=/post/datafaucet-aggregate/&amp;title=" target="_blank" rel="noopener" class="share-btn-linkedin">
           <i class="fab fa-linkedin-in"></i>
         </a>
       </li>
@@ -2081,7 +2034,7 @@ d.data.grid()
       
       
       <li>
-        <a href="https://web.whatsapp.com/send?text=Aggregating%20Dataframes%20/post/datafaucet-aggregate/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+        <a href="https://web.whatsapp.com/send?text=%20/post/datafaucet-aggregate/" target="_blank" rel="noopener" class="share-btn-whatsapp">
           <i class="fab fa-whatsapp"></i>
         </a>
       </li>
@@ -2094,7 +2047,7 @@ d.data.grid()
       
       
       <li>
-        <a href="https://service.weibo.com/share/share.php?url=/post/datafaucet-aggregate/&amp;title=Aggregating%20Dataframes" target="_blank" rel="noopener" class="share-btn-weibo">
+        <a href="https://service.weibo.com/share/share.php?url=/post/datafaucet-aggregate/&amp;title=" target="_blank" rel="noopener" class="share-btn-weibo">
           <i class="fab fa-weibo"></i>
         </a>
       </li>
@@ -2113,10 +2066,6 @@ d.data.grid()
 
 
 
-  
-  
-    
-  
   
 
 
@@ -2267,21 +2216,6 @@ d.data.grid()
 
 
   
-  
-  <div class="article-widget content-widget-hr">
-    <h3>Related</h3>
-    <ul>
-      
-      <li><a href="/post/streaming-analytics/">Streaming Analytics</a></li>
-      
-      <li><a href="/post/ai-trip/">The AI scene in the valley</a></li>
-      
-      <li><a href="/post/data-science-qa/">Data Science Q&amp;A</a></li>
-      
-      <li><a href="/post/rewind-2016/">Rewind 2016</a></li>
-      
-    </ul>
-  </div>
   
 
 
