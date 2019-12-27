@@ -17,47 +17,13 @@
       <link>/post/parquet-filters-pushdown/</link>
       <pubDate>Tue, 24 Dec 2019 00:00:00 +0000</pubDate>
       <guid>/post/parquet-filters-pushdown/</guid>
-      <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import datafaucet as dfc
+      <description>&lt;p&gt;Filters can be applied to parquet files to reduce the volume of the data loaded. In particular parquet objects support partition filters and regular row filtering. Spark dags if proprerly constructed can push down some of the filters to the parquet object reader. Here below you will fine a number of test cases when this works correctly and a number of scenario&#39;s where filters pushdown does not apply.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import datafaucet as dfc
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Datafaucet is a productivity framework for ETL, ML application. Simplifying some of the common activities which are typical in Data pipeline such as project scaffolding, data ingesting, start schema generation, forecasting etc.&lt;/p&gt;
-&lt;h2 id=&#34;loading-and-saving-parquet-data&#34;&gt;Loading and Saving Parquet Data&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;dfc.project.load(&#39;minimal&#39;)
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;engine = dfc.engine(&#39;spark&#39;)
+spark = engine.context
 &lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt; [datafaucet] NOTICE parquet.ipynb:engine:__init__ | Connecting to spark master: local[*]
- [datafaucet] NOTICE parquet.ipynb:engine:__init__ | Engine context spark:2.4.4 successfully started
-
-&amp;lt;datafaucet.project.Project at 0x7f6e3bfe9630&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;dfc.metadata.profile()
-&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;profile: minimal
-variables: {}
-engine:
-    type: spark
-    master: local[*]
-    jobname:
-    timezone: naive
-    submit:
-        jars: []
-        packages: []
-        pyfiles:
-        files:
-        repositories:
-        conf:
-providers:
-    local:
-        service: file
-        path: data
-resources: {}
-logging:
-    level: info
-    stdout: true
-    file: datafaucet.log
-    kafka: []
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;filter-and-projections-filters-push-down-on-parquet-files&#34;&gt;Filter and projections Filters push down on parquet files&lt;/h3&gt;
-&lt;p&gt;The following show how to selectively read files on parquet files (with partitions)&lt;/p&gt;
-&lt;h4 id=&#34;create-data&#34;&gt;Create data&lt;/h4&gt;
+&lt;h3 id=&#34;create-a-sample-dataframe&#34;&gt;Create a sample dataframe&lt;/h3&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;df = dfc.range(10000).cols.create(&#39;g&#39;).randchoice([0,1,2,3])
 df.cols.groupby(&#39;g&#39;).agg(&#39;count&#39;).data.grid()
 &lt;/code&gt;&lt;/pre&gt;
@@ -87,30 +53,28 @@ df.cols.groupby(&#39;g&#39;).agg(&#39;count&#39;).data.grid()
     &lt;tr&gt;
       &lt;td&gt;0&lt;/td&gt;
       &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;2520&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;2544&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;2432&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
       &lt;td&gt;2504&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;1&lt;/td&gt;
-      &lt;td&gt;1&lt;/td&gt;
-      &lt;td&gt;2320&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;2&lt;/td&gt;
-      &lt;td&gt;3&lt;/td&gt;
-      &lt;td&gt;2640&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;3&lt;/td&gt;
-      &lt;td&gt;2&lt;/td&gt;
-      &lt;td&gt;2536&lt;/td&gt;
     &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;/div&gt;
-&lt;h4 id=&#34;save-data-as-parquet-objects&#34;&gt;Save data as parquet objects&lt;/h4&gt;
+&lt;h3 id=&#34;save-data-as-a-parquet-object&#34;&gt;Save data as a parquet object&lt;/h3&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;df.repartition(&#39;g&#39;).save(&#39;local&#39;, &#39;groups.parquet&#39;);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt; [datafaucet] INFO parquet.ipynb:engine:save_log | save
 &lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;dfc.list(&#39;data/save/groups.parquet&#39;).data.grid()
 &lt;/code&gt;&lt;/pre&gt;
@@ -170,18 +134,14 @@ df.cols.groupby(&#39;g&#39;).agg(&#39;count&#39;).data.grid()
   &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;/div&gt;
-&lt;h4 id=&#34;read-data-parquet-objects-with-pushdown-filters&#34;&gt;Read data parquet objects (with pushdown filters)&lt;/h4&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;spark = dfc.engine().context
-&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;read-data-parquet-objects&#34;&gt;Read data parquet objects&lt;/h3&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;df = dfc.load(&#39;data/save/groups.parquet&#39;)
 &lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt; [datafaucet] INFO parquet.ipynb:engine:load_log | load
-&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;debugging-the-physical-query-plan&#34;&gt;Debugging the physical query plan&lt;/h4&gt;
+&lt;p&gt;Here below we are going to debug the query plan. This can be done with the dataframe method &lt;code&gt;.explain()&lt;/code&gt;&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;df.explain()
 &lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;== Physical Plan ==
-*(1) FileScan parquet [id#91L,g#92] Batched: true, Format: Parquet, Location: InMemoryFileIndex[file:/home/natbusa/Projects/datafaucet/examples/tutorial/data/save/groups.parquet], PartitionCount: 4, PartitionFilters: [], PushedFilters: [], ReadSchema: struct&amp;lt;id:bigint&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;To keep things simple let&#39;s focus only on the Parquet File Reader. In particular the function &lt;code&gt;explainSource(obj)&lt;/code&gt; here below parses and prints out only some of the file reader parameters relevant for parquet filter and partition filter pushdown&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def explainSource(obj):
     for s in obj._jdf.queryExecution().simpleString().split(&#39;\n&#39;):
         if &#39;FileScan&#39; in s:
@@ -210,8 +170,9 @@ df.cols.groupby(&#39;g&#39;).agg(&#39;count&#39;).data.grid()
             
             return dfc.yaml.YamlDict(res)
 &lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;testing-pushdown&#34;&gt;Testing Pushdown&lt;/h3&gt;
+&lt;p&gt;This first test does not filter anything. However as you see the partitionj variable &lt;code&gt;g&lt;/code&gt; is materialized in directories and does not appear in the readSchema, which only includes those columns which are not partitions&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;### No pushdown on the physical plan
-
 explainSource(df)
 &lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;Batched: &#39;true&#39;
@@ -221,6 +182,7 @@ PartitionFilters: &#39;[]&#39;
 PushedFilters: &#39;[]&#39;
 ReadSchema: struct&amp;lt;id:bigint&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Counting does not require any column, therefore the next one effectely just count data-less rows&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;### Pushdown only column selection
 res = df.groupby(&#39;g&#39;).count()
 explainSource(res)
@@ -232,6 +194,7 @@ PartitionFilters: &#39;[]&#39;
 PushedFilters: &#39;[]&#39;
 ReadSchema: struct&amp;lt;&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Filtering on a column which is not a partition triggers a columnar filter during read&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# push down row filter only but take all partitions
 res = df.filter(&#39;id&amp;gt;100&#39;)
 explainSource(res)
@@ -243,6 +206,7 @@ PartitionFilters: &#39;[]&#39;
 PushedFilters: &#39;[IsNotNull(id), GreaterThan(id,100)]&#39;
 ReadSchema: struct&amp;lt;id:bigint&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Filters can be combined. For example here below a partition and a row (columnar) filter are part of the same filter statement&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# pushdown partition filters and row (columnar) filters
 res = df.filter(&#39;id&amp;gt;100 and g=1&#39;).groupby(&#39;g&#39;).count()
 explainSource(res)
@@ -254,6 +218,7 @@ PartitionFilters: &#39;[isnotnull(g#92), (g#92 = 1)]&#39;
 PushedFilters: &#39;[IsNotNull(id), GreaterThan(id,100)]&#39;
 ReadSchema: struct&amp;lt;id:bigint&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Filters can combined with logical operators&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# pushdown partition filters and row (columnar) filters
 res = df.filter(&#39;id&amp;gt;100 and (g=2 or g=3)&#39;).groupby(&#39;g&#39;).count()
 explainSource(res)
@@ -261,10 +226,11 @@ explainSource(res)
 &lt;pre&gt;&lt;code&gt;Batched: &#39;true&#39;
 Format: Parquet
 PartitionCount: &#39;2&#39;
-PartitionFilters: &#39;[((g#92 = 2) || (g#92 = 3))]&#39;
+PartitionFilters: &#39;[((g#265 = 2) || (g#265 = 3))]&#39;
 PushedFilters: &#39;[IsNotNull(id), GreaterThan(id,100)]&#39;
 ReadSchema: struct&amp;lt;id:bigint&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Partition filters can also be greater-than and less-than predicates&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# pushdown partition filters and row (columnar) filters
 res = df.filter(&#39;id&amp;gt;100 and g&amp;gt;1&#39;).groupby(&#39;g&#39;).count()
 explainSource(res)
@@ -272,10 +238,11 @@ explainSource(res)
 &lt;pre&gt;&lt;code&gt;Batched: &#39;true&#39;
 Format: Parquet
 PartitionCount: &#39;2&#39;
-PartitionFilters: &#39;[isnotnull(g#92), (g#92 &amp;gt; 1)]&#39;
+PartitionFilters: &#39;[isnotnull(g#265), (g#265 &amp;gt; 1)]&#39;
 PushedFilters: &#39;[IsNotNull(id), GreaterThan(id,100)]&#39;
 ReadSchema: struct&amp;lt;id:bigint&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Filters can be heaped up and cascaded. Effectively adding more filters will &lt;code&gt;AND&lt;/code&gt;&#39;ed together&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# pushdown partition filters and row (columnar) filters can be added up
 res = df.filter(&#39;id&amp;gt;100 and g&amp;gt;1&#39;).filter(&#39;id&amp;lt;500 and g=2&#39;).groupby(&#39;g&#39;).count()
 explainSource(res)
@@ -283,7 +250,7 @@ explainSource(res)
 &lt;pre&gt;&lt;code&gt;Batched: &#39;true&#39;
 Format: Parquet
 PartitionCount: &#39;1&#39;
-PartitionFilters: &#39;[isnotnull(g#92), (g#92 &amp;gt; 1), (g#92 = 2)]&#39;
+PartitionFilters: &#39;[isnotnull(g#265), (g#265 &amp;gt; 1), (g#265 = 2)]&#39;
 PushedFilters: &#39;[IsNotNull(id), GreaterThan(id,100), LessThan(id,500)]&#39;
 ReadSchema: struct&amp;lt;id:bigint&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
@@ -295,9 +262,7 @@ ReadSchema: struct&amp;lt;id:bigint&amp;gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;df = dfc.load(&#39;data/save/groups.parquet&#39;)
 df.cache()
 &lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt; [datafaucet] INFO parquet.ipynb:engine:load_log | load
-
-DataFrame[id: bigint, g: int]
+&lt;pre&gt;&lt;code&gt;DataFrame[id: bigint, g: int]
 &lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# pushdown partition filters and row (columnar) filters are ignored after cache, count, and the like
 res = df.filter(&#39;id&amp;gt;100 and g=1&#39;).groupby(&#39;g&#39;).count()
@@ -313,8 +278,6 @@ ReadSchema: struct&amp;lt;id:bigint&amp;gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# re-read will not push down the filters ...
 df = dfc.load(&#39;data/save/groups.parquet&#39;)
 &lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt; [datafaucet] INFO parquet.ipynb:engine:load_log | load
-&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# pushdown partition filters and row (columnar) filters are ignored after cache, count, and the like
 res = df.filter(&#39;id&amp;gt;100 and g=1&#39;).groupby(&#39;g&#39;).count()
 explainSource(res)
@@ -325,6 +288,8 @@ PartitionCount: &#39;4&#39;
 PartitionFilters: &#39;[]&#39;
 PushedFilters: &#39;[]&#39;
 ReadSchema: struct&amp;lt;id:bigint&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>

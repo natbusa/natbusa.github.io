@@ -28,8 +28,8 @@
   
     
   
-  <meta name="description" content="import datafaucet as dfc  Datafaucet is a productivity framework for ETL, ML application. Simplifying some of the common activities which are typical in Data pipeline such as project scaffolding, data ingesting, start schema generation, forecasting etc.
-Loading and Saving Parquet Data dfc.project.load(&#39;minimal&#39;)   [datafaucet] NOTICE parquet.ipynb:engine:__init__ | Connecting to spark master: local[*] [datafaucet] NOTICE parquet.ipynb:engine:__init__ | Engine context spark:2.4.4 successfully started &lt;datafaucet.project.Project at 0x7f6e3bfe9630&gt;  dfc.metadata.profile()  profile: minimal variables: {} engine: type: spark master: local[*] jobname: timezone: naive submit: jars: [] packages: [] pyfiles: files: repositories: conf: providers: local: service: file path: data resources: {} logging: level: info stdout: true file: datafaucet.">
+  <meta name="description" content="Filters can be applied to parquet files to reduce the volume of the data loaded. In particular parquet objects support partition filters and regular row filtering. Spark dags if proprerly constructed can push down some of the filters to the parquet object reader. Here below you will fine a number of test cases when this works correctly and a number of scenario&#39;s where filters pushdown does not apply.
+import datafaucet as dfc  engine = dfc.">
 
   
   <link rel="alternate" hreflang="en-us" href="/post/parquet-filters-pushdown/">
@@ -225,8 +225,8 @@ Loading and Saving Parquet Data dfc.project.load(&#39;minimal&#39;)   [datafauce
   <meta property="og:site_name" content="Natalino Busa">
   <meta property="og:url" content="/post/parquet-filters-pushdown/">
   <meta property="og:title" content="Parquet Pushdown Filters | Natalino Busa">
-  <meta property="og:description" content="import datafaucet as dfc  Datafaucet is a productivity framework for ETL, ML application. Simplifying some of the common activities which are typical in Data pipeline such as project scaffolding, data ingesting, start schema generation, forecasting etc.
-Loading and Saving Parquet Data dfc.project.load(&#39;minimal&#39;)   [datafaucet] NOTICE parquet.ipynb:engine:__init__ | Connecting to spark master: local[*] [datafaucet] NOTICE parquet.ipynb:engine:__init__ | Engine context spark:2.4.4 successfully started &lt;datafaucet.project.Project at 0x7f6e3bfe9630&gt;  dfc.metadata.profile()  profile: minimal variables: {} engine: type: spark master: local[*] jobname: timezone: naive submit: jars: [] packages: [] pyfiles: files: repositories: conf: providers: local: service: file path: data resources: {} logging: level: info stdout: true file: datafaucet."><meta property="og:image" content="/img/icon-192.png">
+  <meta property="og:description" content="Filters can be applied to parquet files to reduce the volume of the data loaded. In particular parquet objects support partition filters and regular row filtering. Spark dags if proprerly constructed can push down some of the filters to the parquet object reader. Here below you will fine a number of test cases when this works correctly and a number of scenario&#39;s where filters pushdown does not apply.
+import datafaucet as dfc  engine = dfc."><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
     
@@ -278,7 +278,7 @@ Loading and Saving Parquet Data dfc.project.load(&#39;minimal&#39;)   [datafauce
       "url": "/img/icon-512.png"
     }
   },
-  "description": "import datafaucet as dfc  Datafaucet is a productivity framework for ETL, ML application. Simplifying some of the common activities which are typical in Data pipeline such as project scaffolding, data ingesting, start schema generation, forecasting etc.\nLoading and Saving Parquet Data dfc.project.load('minimal')   [datafaucet] NOTICE parquet.ipynb:engine:__init__ | Connecting to spark master: local[*] [datafaucet] NOTICE parquet.ipynb:engine:__init__ | Engine context spark:2.4.4 successfully started \u0026lt;datafaucet.project.Project at 0x7f6e3bfe9630\u0026gt;  dfc.metadata.profile()  profile: minimal variables: {} engine: type: spark master: local[*] jobname: timezone: naive submit: jars: [] packages: [] pyfiles: files: repositories: conf: providers: local: service: file path: data resources: {} logging: level: info stdout: true file: datafaucet."
+  "description": "Filters can be applied to parquet files to reduce the volume of the data loaded. In particular parquet objects support partition filters and regular row filtering. Spark dags if proprerly constructed can push down some of the filters to the parquet object reader. Here below you will fine a number of test cases when this works correctly and a number of scenario's where filters pushdown does not apply.\nimport datafaucet as dfc  engine = dfc."
 }
 </script>
 
@@ -671,47 +671,13 @@ Loading and Saving Parquet Data dfc.project.load(&#39;minimal&#39;)   [datafauce
   <div class="article-container">
 
     <div class="article-style">
-      <pre><code class="language-python">import datafaucet as dfc
+      <p>Filters can be applied to parquet files to reduce the volume of the data loaded. In particular parquet objects support partition filters and regular row filtering. Spark dags if proprerly constructed can push down some of the filters to the parquet object reader. Here below you will fine a number of test cases when this works correctly and a number of scenario's where filters pushdown does not apply.</p>
+<pre><code class="language-python">import datafaucet as dfc
 </code></pre>
-<p>Datafaucet is a productivity framework for ETL, ML application. Simplifying some of the common activities which are typical in Data pipeline such as project scaffolding, data ingesting, start schema generation, forecasting etc.</p>
-<h2 id="loading-and-saving-parquet-data">Loading and Saving Parquet Data</h2>
-<pre><code class="language-python">dfc.project.load('minimal')
+<pre><code class="language-python">engine = dfc.engine('spark')
+spark = engine.context
 </code></pre>
-<pre><code> [datafaucet] NOTICE parquet.ipynb:engine:__init__ | Connecting to spark master: local[*]
- [datafaucet] NOTICE parquet.ipynb:engine:__init__ | Engine context spark:2.4.4 successfully started
-
-&lt;datafaucet.project.Project at 0x7f6e3bfe9630&gt;
-</code></pre>
-<pre><code class="language-python">dfc.metadata.profile()
-</code></pre>
-<pre><code>profile: minimal
-variables: {}
-engine:
-    type: spark
-    master: local[*]
-    jobname:
-    timezone: naive
-    submit:
-        jars: []
-        packages: []
-        pyfiles:
-        files:
-        repositories:
-        conf:
-providers:
-    local:
-        service: file
-        path: data
-resources: {}
-logging:
-    level: info
-    stdout: true
-    file: datafaucet.log
-    kafka: []
-</code></pre>
-<h3 id="filter-and-projections-filters-push-down-on-parquet-files">Filter and projections Filters push down on parquet files</h3>
-<p>The following show how to selectively read files on parquet files (with partitions)</p>
-<h4 id="create-data">Create data</h4>
+<h3 id="create-a-sample-dataframe">Create a sample dataframe</h3>
 <pre><code class="language-python">df = dfc.range(10000).cols.create('g').randchoice([0,1,2,3])
 df.cols.groupby('g').agg('count').data.grid()
 </code></pre>
@@ -741,30 +707,28 @@ df.cols.groupby('g').agg('count').data.grid()
     <tr>
       <td>0</td>
       <td>0</td>
+      <td>2520</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>1</td>
+      <td>2544</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>3</td>
+      <td>2432</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>2</td>
       <td>2504</td>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td>1</td>
-      <td>2320</td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>3</td>
-      <td>2640</td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td>2</td>
-      <td>2536</td>
     </tr>
   </tbody>
 </table>
 </div>
-<h4 id="save-data-as-parquet-objects">Save data as parquet objects</h4>
+<h3 id="save-data-as-a-parquet-object">Save data as a parquet object</h3>
 <pre><code class="language-python">df.repartition('g').save('local', 'groups.parquet');
-</code></pre>
-<pre><code> [datafaucet] INFO parquet.ipynb:engine:save_log | save
 </code></pre>
 <pre><code class="language-python">dfc.list('data/save/groups.parquet').data.grid()
 </code></pre>
@@ -824,18 +788,14 @@ df.cols.groupby('g').agg('count').data.grid()
   </tbody>
 </table>
 </div>
-<h4 id="read-data-parquet-objects-with-pushdown-filters">Read data parquet objects (with pushdown filters)</h4>
-<pre><code class="language-python">spark = dfc.engine().context
-</code></pre>
+<h3 id="read-data-parquet-objects">Read data parquet objects</h3>
 <pre><code class="language-python">df = dfc.load('data/save/groups.parquet')
 </code></pre>
-<pre><code> [datafaucet] INFO parquet.ipynb:engine:load_log | load
-</code></pre>
+<h4 id="debugging-the-physical-query-plan">Debugging the physical query plan</h4>
+<p>Here below we are going to debug the query plan. This can be done with the dataframe method <code>.explain()</code></p>
 <pre><code class="language-python">df.explain()
 </code></pre>
-<pre><code>== Physical Plan ==
-*(1) FileScan parquet [id#91L,g#92] Batched: true, Format: Parquet, Location: InMemoryFileIndex[file:/home/natbusa/Projects/datafaucet/examples/tutorial/data/save/groups.parquet], PartitionCount: 4, PartitionFilters: [], PushedFilters: [], ReadSchema: struct&lt;id:bigint&gt;
-</code></pre>
+<p>To keep things simple let's focus only on the Parquet File Reader. In particular the function <code>explainSource(obj)</code> here below parses and prints out only some of the file reader parameters relevant for parquet filter and partition filter pushdown</p>
 <pre><code class="language-python">def explainSource(obj):
     for s in obj._jdf.queryExecution().simpleString().split('\n'):
         if 'FileScan' in s:
@@ -864,8 +824,9 @@ df.cols.groupby('g').agg('count').data.grid()
             
             return dfc.yaml.YamlDict(res)
 </code></pre>
+<h3 id="testing-pushdown">Testing Pushdown</h3>
+<p>This first test does not filter anything. However as you see the partitionj variable <code>g</code> is materialized in directories and does not appear in the readSchema, which only includes those columns which are not partitions</p>
 <pre><code class="language-python">### No pushdown on the physical plan
-
 explainSource(df)
 </code></pre>
 <pre><code>Batched: 'true'
@@ -875,6 +836,7 @@ PartitionFilters: '[]'
 PushedFilters: '[]'
 ReadSchema: struct&lt;id:bigint&gt;
 </code></pre>
+<p>Counting does not require any column, therefore the next one effectely just count data-less rows</p>
 <pre><code class="language-python">### Pushdown only column selection
 res = df.groupby('g').count()
 explainSource(res)
@@ -886,6 +848,7 @@ PartitionFilters: '[]'
 PushedFilters: '[]'
 ReadSchema: struct&lt;&gt;
 </code></pre>
+<p>Filtering on a column which is not a partition triggers a columnar filter during read</p>
 <pre><code class="language-python"># push down row filter only but take all partitions
 res = df.filter('id&gt;100')
 explainSource(res)
@@ -897,6 +860,7 @@ PartitionFilters: '[]'
 PushedFilters: '[IsNotNull(id), GreaterThan(id,100)]'
 ReadSchema: struct&lt;id:bigint&gt;
 </code></pre>
+<p>Filters can be combined. For example here below a partition and a row (columnar) filter are part of the same filter statement</p>
 <pre><code class="language-python"># pushdown partition filters and row (columnar) filters
 res = df.filter('id&gt;100 and g=1').groupby('g').count()
 explainSource(res)
@@ -908,6 +872,7 @@ PartitionFilters: '[isnotnull(g#92), (g#92 = 1)]'
 PushedFilters: '[IsNotNull(id), GreaterThan(id,100)]'
 ReadSchema: struct&lt;id:bigint&gt;
 </code></pre>
+<p>Filters can combined with logical operators</p>
 <pre><code class="language-python"># pushdown partition filters and row (columnar) filters
 res = df.filter('id&gt;100 and (g=2 or g=3)').groupby('g').count()
 explainSource(res)
@@ -915,10 +880,11 @@ explainSource(res)
 <pre><code>Batched: 'true'
 Format: Parquet
 PartitionCount: '2'
-PartitionFilters: '[((g#92 = 2) || (g#92 = 3))]'
+PartitionFilters: '[((g#265 = 2) || (g#265 = 3))]'
 PushedFilters: '[IsNotNull(id), GreaterThan(id,100)]'
 ReadSchema: struct&lt;id:bigint&gt;
 </code></pre>
+<p>Partition filters can also be greater-than and less-than predicates</p>
 <pre><code class="language-python"># pushdown partition filters and row (columnar) filters
 res = df.filter('id&gt;100 and g&gt;1').groupby('g').count()
 explainSource(res)
@@ -926,10 +892,11 @@ explainSource(res)
 <pre><code>Batched: 'true'
 Format: Parquet
 PartitionCount: '2'
-PartitionFilters: '[isnotnull(g#92), (g#92 &gt; 1)]'
+PartitionFilters: '[isnotnull(g#265), (g#265 &gt; 1)]'
 PushedFilters: '[IsNotNull(id), GreaterThan(id,100)]'
 ReadSchema: struct&lt;id:bigint&gt;
 </code></pre>
+<p>Filters can be heaped up and cascaded. Effectively adding more filters will <code>AND</code>'ed together</p>
 <pre><code class="language-python"># pushdown partition filters and row (columnar) filters can be added up
 res = df.filter('id&gt;100 and g&gt;1').filter('id&lt;500 and g=2').groupby('g').count()
 explainSource(res)
@@ -937,7 +904,7 @@ explainSource(res)
 <pre><code>Batched: 'true'
 Format: Parquet
 PartitionCount: '1'
-PartitionFilters: '[isnotnull(g#92), (g#92 &gt; 1), (g#92 = 2)]'
+PartitionFilters: '[isnotnull(g#265), (g#265 &gt; 1), (g#265 = 2)]'
 PushedFilters: '[IsNotNull(id), GreaterThan(id,100), LessThan(id,500)]'
 ReadSchema: struct&lt;id:bigint&gt;
 </code></pre>
@@ -949,9 +916,7 @@ ReadSchema: struct&lt;id:bigint&gt;
 <pre><code class="language-python">df = dfc.load('data/save/groups.parquet')
 df.cache()
 </code></pre>
-<pre><code> [datafaucet] INFO parquet.ipynb:engine:load_log | load
-
-DataFrame[id: bigint, g: int]
+<pre><code>DataFrame[id: bigint, g: int]
 </code></pre>
 <pre><code class="language-python"># pushdown partition filters and row (columnar) filters are ignored after cache, count, and the like
 res = df.filter('id&gt;100 and g=1').groupby('g').count()
@@ -967,8 +932,6 @@ ReadSchema: struct&lt;id:bigint&gt;
 <pre><code class="language-python"># re-read will not push down the filters ...
 df = dfc.load('data/save/groups.parquet')
 </code></pre>
-<pre><code> [datafaucet] INFO parquet.ipynb:engine:load_log | load
-</code></pre>
 <pre><code class="language-python"># pushdown partition filters and row (columnar) filters are ignored after cache, count, and the like
 res = df.filter('id&gt;100 and g=1').groupby('g').count()
 explainSource(res)
@@ -979,6 +942,8 @@ PartitionCount: '4'
 PartitionFilters: '[]'
 PushedFilters: '[]'
 ReadSchema: struct&lt;id:bigint&gt;
+</code></pre>
+<pre><code class="language-python">
 </code></pre>
 
     </div>
