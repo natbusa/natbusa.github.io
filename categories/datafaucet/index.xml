@@ -332,7 +332,7 @@ ReadSchema: struct&amp;lt;id:bigint&amp;gt;
     <item>
       <title>Aggregating Dataframes</title>
       <link>/post/datafaucet-aggregate/</link>
-      <pubDate>Tue, 12 Nov 2019 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 11 Nov 2019 00:00:00 +0000</pubDate>
       <guid>/post/datafaucet-aggregate/</guid>
       <description>&lt;h2 id=&#34;getting-started&#34;&gt;Getting started&lt;/h2&gt;
 &lt;p&gt;Let&#39;s start spark using datafaucet.&lt;/p&gt;

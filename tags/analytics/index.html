@@ -229,7 +229,7 @@
   <meta property="og:description" content="Senior Director Data"><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
-    <meta property="og:updated_time" content="2017-02-07T16:28:27&#43;08:00">
+    <meta property="og:updated_time" content="2019-12-24T00:00:00&#43;00:00">
   
 
   
@@ -548,6 +548,26 @@
   
 
   
+  
+  <div>
+    <h2><a href="/post/parquet-filters-pushdown/">Parquet Pushdown Filters</a></h2>
+    <div class="article-style">
+      
+      import datafaucet as dfc  Datafaucet is a productivity framework for ETL, ML application. Simplifying some of the common activities which are typical in Data pipeline such as project scaffolding, data ingesting, start schema generation, forecasting etc.
+Loading and Saving Parquet Data dfc.project.load('minimal')   [datafaucet] NOTICE parquet.ipynb:engine:__init__ | Connecting to spark master: local[*] [datafaucet] NOTICE parquet.ipynb:engine:__init__ | Engine context spark:2.4.4 successfully started &lt;datafaucet.project.Project at 0x7f6e3bfe9630&gt;  dfc.metadata.profile()  profile: minimal variables: {} engine: type: spark master: local[*] jobname: timezone: naive submit: jars: [] packages: [] pyfiles: files: repositories: conf: providers: local: service: file path: data resources: {} logging: level: info stdout: true file: datafaucet.
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/post/datafaucet-aggregate/">Aggregating Dataframes</a></h2>
+    <div class="article-style">
+      
+      Getting started Let's start spark using datafaucet.
+import datafaucet as dfc  # let's start the engine dfc.engine('spark')  &lt;datafaucet.spark.engine.SparkEngine at 0x7fbdb66f2128&gt;  # expose the engine context spark = dfc.context()  Generating Data df = spark.range(100)  df = (df .cols.create('g').randint(0,3) .cols.create('n').randchoice(['Stacy', 'Sandra']) .cols.create('x').randint(0,100) .cols.create('y').randint(0,100) )  df.data.grid(5)   .dataframe tbody tr th:only-of-type { vertical-align: middle; } .dataframe tbody tr th { vertical-align: top; } .dataframe thead th { text-align: right; }
+      
+    </div>
+  </div>
   
   <div>
     <h2><a href="/post/streaming-analytics/">Streaming Analytics</a></h2>
