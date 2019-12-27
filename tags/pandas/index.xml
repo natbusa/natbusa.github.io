@@ -1,0 +1,1334 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>pandas | Natalino Busa</title>
+    <link>/tags/pandas/</link>
+      <atom:link href="/tags/pandas/index.xml" rel="self" type="application/rss+xml" />
+    <description>pandas</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>2019</copyright><lastBuildDate>Tue, 12 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>/img/icon-192.png</url>
+      <title>pandas</title>
+      <link>/tags/pandas/</link>
+    </image>
+    
+    <item>
+      <title>Aggregating Dataframes</title>
+      <link>/post/datafaucet-aggregate/</link>
+      <pubDate>Tue, 12 Nov 2019 00:00:00 +0000</pubDate>
+      <guid>/post/datafaucet-aggregate/</guid>
+      <description>&lt;h2 id=&#34;getting-started&#34;&gt;Getting started&lt;/h2&gt;
+&lt;p&gt;Let&#39;s start spark using datafaucet.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import datafaucet as dfc
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# let&#39;s start the engine
+dfc.engine(&#39;spark&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;datafaucet.spark.engine.SparkEngine at 0x7fbdb66f2128&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# expose the engine context
+spark  = dfc.context()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;generating-data&#34;&gt;Generating Data&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;df = spark.range(100)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;df = (df
+    .cols.create(&#39;g&#39;).randint(0,3)
+    .cols.create(&#39;n&#39;).randchoice([&#39;Stacy&#39;, &#39;Sandra&#39;])
+    .cols.create(&#39;x&#39;).randint(0,100)
+    .cols.create(&#39;y&#39;).randint(0,100)
+)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;df.data.grid(5)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;id&lt;/th&gt;
+      &lt;th&gt;g&lt;/th&gt;
+      &lt;th&gt;n&lt;/th&gt;
+      &lt;th&gt;x&lt;/th&gt;
+      &lt;th&gt;y&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;91&lt;/td&gt;
+      &lt;td&gt;89&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;19&lt;/td&gt;
+      &lt;td&gt;57&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;34&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;35&lt;/td&gt;
+      &lt;td&gt;15&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;93&lt;/td&gt;
+      &lt;td&gt;90&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;h2 id=&#34;pandas&#34;&gt;Pandas&lt;/h2&gt;
+&lt;p&gt;Let&#39;s start by looking how Pandas does aggregations. Pandas is quite flexible on the points noted above and uses hierachical indexes on both columns and rows to store the aggregation names and the groupby values. Here below a simple aggregation and a more complex one with groupby and multiple aggregation functions.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;pf = df.data.collect()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;pf[[&#39;n&#39;, &#39;x&#39;, &#39;y&#39;]].agg([&#39;max&#39;])
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;n&lt;/th&gt;
+      &lt;th&gt;x&lt;/th&gt;
+      &lt;th&gt;y&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;max&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;agg = (pf[[&#39;g&#39;,&#39;n&#39;, &#39;x&#39;, &#39;y&#39;]]
+           .groupby([&#39;g&#39;, &#39;n&#39;])
+           .agg({
+               &#39;n&#39;: &#39;count&#39;,
+               &#39;x&#39;: [&#39;min&#39;, max],
+               &#39;y&#39;:[&#39;min&#39;, &#39;max&#39;]
+           }))
+agg
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead tr th {
+    text-align: left;
+}
+
+.dataframe thead tr:last-of-type th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;n&lt;/th&gt;
+      &lt;th colspan=&#34;2&#34; halign=&#34;left&#34;&gt;x&lt;/th&gt;
+      &lt;th colspan=&#34;2&#34; halign=&#34;left&#34;&gt;y&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;count&lt;/th&gt;
+      &lt;th&gt;min&lt;/th&gt;
+      &lt;th&gt;max&lt;/th&gt;
+      &lt;th&gt;min&lt;/th&gt;
+      &lt;th&gt;max&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;g&lt;/th&gt;
+      &lt;th&gt;n&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td rowspan=&#34;2&#34; valign=&#34;top&#34;&gt;0&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;9&lt;/td&gt;
+      &lt;td&gt;14&lt;/td&gt;
+      &lt;td&gt;75&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;21&lt;/td&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;96&lt;/td&gt;
+      &lt;td&gt;8&lt;/td&gt;
+      &lt;td&gt;92&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td rowspan=&#34;2&#34; valign=&#34;top&#34;&gt;1&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;20&lt;/td&gt;
+      &lt;td&gt;8&lt;/td&gt;
+      &lt;td&gt;91&lt;/td&gt;
+      &lt;td&gt;9&lt;/td&gt;
+      &lt;td&gt;91&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;18&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;89&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td rowspan=&#34;2&#34; valign=&#34;top&#34;&gt;2&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;12&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;20&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;96&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;h3 id=&#34;stacking&#34;&gt;Stacking&lt;/h3&gt;
+&lt;p&gt;In pandas, you can stack the multiple column index and move it to a column, as below. The choice of stacking or not after aggregation depends on wht you want to do later with the data. Next to the extra index, stacking also explicitely code NaN / Nulls for evry aggregation which is not shared by each column (in case of dict of aggregation functions.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;agg = pf[[&#39;g&#39;, &#39;x&#39;, &#39;y&#39;]].groupby([&#39;g&#39;]).agg([&#39;min&#39;, &#39;max&#39;, &#39;mean&#39;])
+agg = agg.stack(0)
+agg
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;max&lt;/th&gt;
+      &lt;th&gt;mean&lt;/th&gt;
+      &lt;th&gt;min&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;g&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td rowspan=&#34;2&#34; valign=&#34;top&#34;&gt;0&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;96&lt;/td&gt;
+      &lt;td&gt;50.966667&lt;/td&gt;
+      &lt;td&gt;10&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+      &lt;td&gt;47.133333&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td rowspan=&#34;2&#34; valign=&#34;top&#34;&gt;1&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;91&lt;/td&gt;
+      &lt;td&gt;45.026316&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;48.736842&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td rowspan=&#34;2&#34; valign=&#34;top&#34;&gt;2&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;58.750000&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+      &lt;td&gt;53.906250&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;h3 id=&#34;index-as-columns&#34;&gt;Index as columns&lt;/h3&gt;
+&lt;p&gt;Index in pandas is not the same as column data, but you can easily move from one to the other, as shown below, by combine the name information of the various index levels with the values of each level.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;agg.index.names
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;FrozenList([&#39;g&#39;, None])
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# for example these are the value from the first level of the index
+agg.index.get_level_values(0)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;Int64Index([0, 0, 1, 1, 2, 2], dtype=&#39;int64&#39;, name=&#39;g&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The following script will iterate through all the levels and create a column with the name of the original index level otherwise will use &lt;code&gt;_&amp;lt;level#&amp;gt;&lt;/code&gt; if no name is available. Remember that pandas allows indexes to be nameless.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;levels = agg.index.names
+for (name, lvl) in zip(levels, range(len(levels))):
+    agg[name or f&#39;_{lvl}&#39;] = agg.index.get_level_values(lvl)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#now the index is standard columns, drop the index
+agg.reset_index(inplace=True, drop=True)
+agg
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;max&lt;/th&gt;
+      &lt;th&gt;mean&lt;/th&gt;
+      &lt;th&gt;min&lt;/th&gt;
+      &lt;th&gt;g&lt;/th&gt;
+      &lt;th&gt;_1&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;96&lt;/td&gt;
+      &lt;td&gt;50.966667&lt;/td&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+      &lt;td&gt;47.133333&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;91&lt;/td&gt;
+      &lt;td&gt;45.026316&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;48.736842&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;58.750000&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;5&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+      &lt;td&gt;53.906250&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;h2 id=&#34;spark-python&#34;&gt;Spark (Python)&lt;/h2&gt;
+&lt;p&gt;Spark aggregation is a bit simpler, but definitely very flexible, so we can achieve the same result with a little more work in some cases. Here below a simple example and a more complex one, reproducing the same three cases as above.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;df.select(&#39;n&#39;, &#39;x&#39;, &#39;y&#39;).agg({&#39;n&#39;:&#39;max&#39;, &#39;x&#39;:&#39;max&#39;, &#39;y&#39;:&#39;max&#39;}).toPandas()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;max(x)&lt;/th&gt;
+      &lt;th&gt;max(y)&lt;/th&gt;
+      &lt;th&gt;max(n)&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;p&gt;Or with a little more work we can exactly reproduce the pandas case:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from pyspark.sql import functions as F
+
+df.select(&#39;n&#39;, &#39;x&#39;, &#39;y&#39;).agg(
+    F.lit(&#39;max&#39;).alias(&#39;_idx&#39;),
+    F.max(&#39;n&#39;).alias(&#39;n&#39;), 
+    F.max(&#39;x&#39;).alias(&#39;x&#39;), 
+    F.max(&#39;y&#39;).alias(&#39;y&#39;)).toPandas()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;_idx&lt;/th&gt;
+      &lt;th&gt;n&lt;/th&gt;
+      &lt;th&gt;x&lt;/th&gt;
+      &lt;th&gt;y&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;max&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;p&gt;More complicated aggregation cannot be called by string and must be provided by functions. Here below a way to reproduce groupby aggregation as in the second pandas example:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;(df
+    .select(&#39;g&#39;, &#39;n&#39;, &#39;x&#39;, &#39;y&#39;)
+    .groupby(&#39;g&#39;, &#39;n&#39;)
+    .agg(
+        F.count(&#39;n&#39;).alias(&#39;n_count&#39;),
+        F.min(&#39;x&#39;).alias(&#39;x_min&#39;),
+        F.max(&#39;x&#39;).alias(&#39;x_max&#39;),
+        F.min(&#39;y&#39;).alias(&#39;y_min&#39;),
+        F.max(&#39;y&#39;).alias(&#39;y_max&#39;)
+    )
+).toPandas()
+        
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;g&lt;/th&gt;
+      &lt;th&gt;n&lt;/th&gt;
+      &lt;th&gt;n_count&lt;/th&gt;
+      &lt;th&gt;x_min&lt;/th&gt;
+      &lt;th&gt;x_max&lt;/th&gt;
+      &lt;th&gt;y_min&lt;/th&gt;
+      &lt;th&gt;y_max&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;17&lt;/td&gt;
+      &lt;td&gt;96&lt;/td&gt;
+      &lt;td&gt;8&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;20&lt;/td&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;92&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;86&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;18&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;89&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;14&lt;/td&gt;
+      &lt;td&gt;29&lt;/td&gt;
+      &lt;td&gt;96&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;20&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;91&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;5&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;18&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;96&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;h3 id=&#34;stacking-1&#34;&gt;Stacking&lt;/h3&gt;
+&lt;p&gt;Stacking, as in pandas, can be used to expose the column name on a different index column, unfortunatel stack is currently available only in the SQL initerface and not very flexible as in the pandas counterpart (&lt;a href=&#34;https://spark.apache.org/docs/2.3.0/api/sql/#stack&#34;&gt;https://spark.apache.org/docs/2.3.0/api/sql/#stack&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;You could use pyspark &lt;code&gt;expr&lt;/code&gt; to call the SQL function as explained here (&lt;a href=&#34;https://stackoverflow.com/questions/42465568/unpivot-in-spark-sql-pyspark)&#34;&gt;https://stackoverflow.com/questions/42465568/unpivot-in-spark-sql-pyspark)&lt;/a&gt;. However, another way would be to union the various results as shown here below.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;agg = pf[[&#39;g&#39;, &#39;x&#39;, &#39;y&#39;]].groupby([&#39;g&#39;]).agg([&#39;min&#39;, &#39;max&#39;, &#39;mean&#39;])
+a
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from pyspark.sql import functions as F
+
+(df
+    .select(&#39;g&#39;, &#39;x&#39;)
+    .groupby(&#39;g&#39;)
+    .agg(
+        F.lit(&#39;x&#39;).alias(&#39;_idx&#39;),
+        F.min(&#39;x&#39;).alias(&#39;min&#39;),
+        F.max(&#39;x&#39;).alias(&#39;max&#39;),
+        F.mean(&#39;x&#39;).alias(&#39;mean&#39;)
+    )
+).union(
+df
+    .select(&#39;g&#39;, &#39;y&#39;)
+    .groupby(&#39;g&#39;)
+    .agg(
+        F.lit(&#39;y&#39;).alias(&#39;_idx&#39;),
+        F.min(&#39;y&#39;).alias(&#39;min&#39;),
+        F.max(&#39;y&#39;).alias(&#39;max&#39;),
+        F.mean(&#39;y&#39;).alias(&#39;mean&#39;)
+    )
+).toPandas()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;g&lt;/th&gt;
+      &lt;th&gt;_idx&lt;/th&gt;
+      &lt;th&gt;min&lt;/th&gt;
+      &lt;th&gt;max&lt;/th&gt;
+      &lt;th&gt;mean&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;91&lt;/td&gt;
+      &lt;td&gt;45.026316&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;58.750000&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;96&lt;/td&gt;
+      &lt;td&gt;50.966667&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;48.736842&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+      &lt;td&gt;53.906250&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;5&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+      &lt;td&gt;47.133333&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;h3 id=&#34;generatring-aggregating-code&#34;&gt;Generatring aggregating code&lt;/h3&gt;
+&lt;p&gt;The code above looks complicated, but is very regular, hence we can generate it! What we need is a to a list of lists for the aggregation functions as shown here below:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;dfs = []
+for c in [&#39;x&#39;,&#39;y&#39;]:
+    print(&#39; &#39;*2, f&#39;col: {c}&#39;)
+    aggs = []
+    for func in [F.min, F.max, F.mean]:
+        f = func(c).alias(func.__name__)
+        aggs.append(f)
+        print(&#39; &#39;*4, f&#39;func: {f}&#39;)
+        
+    dfs.append(df.select(&#39;g&#39;, c).groupby(&#39;g&#39;).agg(*aggs))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;   col: x
+     func: Column&amp;lt;b&#39;min(x) AS `min`&#39;&amp;gt;
+     func: Column&amp;lt;b&#39;max(x) AS `max`&#39;&amp;gt;
+     func: Column&amp;lt;b&#39;avg(x) AS `mean`&#39;&amp;gt;
+   col: y
+     func: Column&amp;lt;b&#39;min(y) AS `min`&#39;&amp;gt;
+     func: Column&amp;lt;b&#39;max(y) AS `max`&#39;&amp;gt;
+     func: Column&amp;lt;b&#39;avg(y) AS `mean`&#39;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The dataframes in this generator have all the same columns and can be reduced with union calls&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from functools import reduce
+
+reduce(lambda a,b: a.union(b), dfs).toPandas()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;g&lt;/th&gt;
+      &lt;th&gt;min&lt;/th&gt;
+      &lt;th&gt;max&lt;/th&gt;
+      &lt;th&gt;mean&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;91&lt;/td&gt;
+      &lt;td&gt;45.026316&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;58.750000&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;96&lt;/td&gt;
+      &lt;td&gt;50.966667&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;48.736842&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+      &lt;td&gt;53.906250&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;5&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+      &lt;td&gt;47.133333&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;h2 id=&#34;meet-datafaucet-agg&#34;&gt;Meet DataFaucet agg&lt;/h2&gt;
+&lt;p&gt;One of the goal of datafaucet is to simplify analytics, data wrangling and data
+discovery over a set of engine with an intuitive interface. So the sketched
+solution above is available, with a few extras. See below the examples&lt;/p&gt;
+&lt;p&gt;The code here below attempt to produce readable code, engine agnostic data
+aggregations. The aggregation api is always in the form:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;df.cols.get(...).groupby(...).agg(...)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Alternativaly, you can &lt;code&gt;find&lt;/code&gt; instead of &lt;code&gt;get&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# simple aggregation by name
+d = df.cols.get(&#39;x&#39;).agg(&#39;distinct&#39;)
+d.data.grid()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;x&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;64&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# simple aggregation (multiple) by name
+d = df.cols.get(&#39;x&#39;).agg([&#39;distinct&#39;, &#39;avg&#39;])
+d.data.grid()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;x_distinct&lt;/th&gt;
+      &lt;th&gt;x_avg&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;64&lt;/td&gt;
+      &lt;td&gt;51.2&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# simple aggregation (multiple) by name (stacked)
+d = df.cols.get(&#39;x&#39;).agg([&#39;distinct&#39;, &#39;avg&#39;], stack=True)
+d.data.grid()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;_idx&lt;/th&gt;
+      &lt;th&gt;distinct&lt;/th&gt;
+      &lt;th&gt;avg&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;64&lt;/td&gt;
+      &lt;td&gt;51.2&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# simple aggregation (multiple) by name (stacked, custom index name)
+d = df.cols.get(&#39;x&#39;).agg([&#39;distinct&#39;, &#39;avg&#39;], stack=&#39;colname&#39;)
+d.data.grid()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;colname&lt;/th&gt;
+      &lt;th&gt;distinct&lt;/th&gt;
+      &lt;th&gt;avg&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;64&lt;/td&gt;
+      &lt;td&gt;51.2&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# simple aggregation (multiple) by name and function
+d = df.cols.get(&#39;x&#39;).agg([&#39;distinct&#39;, F.min, F.max, &#39;avg&#39;])
+d.data.grid()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;x_distinct&lt;/th&gt;
+      &lt;th&gt;x_min&lt;/th&gt;
+      &lt;th&gt;x_max&lt;/th&gt;
+      &lt;th&gt;x_avg&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;64&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;51.2&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# multiple aggregation by name and function
+d = df.cols.get(&#39;x&#39;, &#39;y&#39;).agg([&#39;distinct&#39;, F.min, F.max, &#39;avg&#39;])
+d.data.grid()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;x_distinct&lt;/th&gt;
+      &lt;th&gt;x_min&lt;/th&gt;
+      &lt;th&gt;x_max&lt;/th&gt;
+      &lt;th&gt;x_avg&lt;/th&gt;
+      &lt;th&gt;y_distinct&lt;/th&gt;
+      &lt;th&gt;y_min&lt;/th&gt;
+      &lt;th&gt;y_max&lt;/th&gt;
+      &lt;th&gt;y_avg&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;64&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;97&lt;/td&gt;
+      &lt;td&gt;51.2&lt;/td&gt;
+      &lt;td&gt;67&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+      &lt;td&gt;49.91&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# multiple aggregation (multiple) by name and function
+d = df.cols.get(&#39;x&#39;, &#39;y&#39;).agg({
+    &#39;x&#39;:[&#39;distinct&#39;, F.min], 
+    &#39;y&#39;:[&#39;distinct&#39;, &#39;max&#39;]})
+
+d.data.grid()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;x_distinct&lt;/th&gt;
+      &lt;th&gt;x_min&lt;/th&gt;
+      &lt;th&gt;x_max&lt;/th&gt;
+      &lt;th&gt;y_distinct&lt;/th&gt;
+      &lt;th&gt;y_min&lt;/th&gt;
+      &lt;th&gt;y_max&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;64&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;None&lt;/td&gt;
+      &lt;td&gt;67&lt;/td&gt;
+      &lt;td&gt;None&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# multiple aggregation (multiple) by name and function (stacked)
+d = df.cols.get(&#39;x&#39;, &#39;y&#39;).agg({
+    &#39;x&#39;:[&#39;distinct&#39;, F.min], 
+    &#39;y&#39;:[&#39;distinct&#39;, &#39;max&#39;]}, stack=True)
+d.data.grid()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;_idx&lt;/th&gt;
+      &lt;th&gt;distinct&lt;/th&gt;
+      &lt;th&gt;min&lt;/th&gt;
+      &lt;th&gt;max&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;64&lt;/td&gt;
+      &lt;td&gt;2.0&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;67&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+      &lt;td&gt;98.0&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# grouped by, multiple aggregation (multiple) by name and function (stacked)
+d = df.cols.get(&#39;x&#39;, &#39;y&#39;).groupby(&#39;g&#39;,&#39;n&#39;).agg({
+    &#39;x&#39;:[&#39;distinct&#39;, F.min], 
+    &#39;y&#39;:[&#39;distinct&#39;, &#39;max&#39;]}, stack=True)
+d.data.grid()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;extended-list-of-aggregation&#34;&gt;Extended list of aggregation&lt;/h3&gt;
+&lt;p&gt;An extended list of aggregation is available, both by name and by function in the datafaucet library&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from datafaucet.spark import aggregations as A
+
+d = df.cols.get(&#39;x&#39;, &#39;y&#39;).groupby(&#39;g&#39;,&#39;n&#39;).agg([
+        &#39;type&#39;,
+        (&#39;uniq&#39;, A.distinct),
+        &#39;one&#39;,
+        &#39;top3&#39;,
+    ], stack=True)
+
+d.data.grid()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;g&lt;/th&gt;
+      &lt;th&gt;n&lt;/th&gt;
+      &lt;th&gt;_idx&lt;/th&gt;
+      &lt;th&gt;type&lt;/th&gt;
+      &lt;th&gt;uniq&lt;/th&gt;
+      &lt;th&gt;one&lt;/th&gt;
+      &lt;th&gt;top3&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;int&lt;/td&gt;
+      &lt;td&gt;23&lt;/td&gt;
+      &lt;td&gt;67&lt;/td&gt;
+      &lt;td&gt;{32: 2, 25: 2, 39: 2}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;int&lt;/td&gt;
+      &lt;td&gt;16&lt;/td&gt;
+      &lt;td&gt;74&lt;/td&gt;
+      &lt;td&gt;{70: 1, 74: 1, 19: 1}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;int&lt;/td&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;40&lt;/td&gt;
+      &lt;td&gt;{4: 2, 97: 2, 69: 1}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;int&lt;/td&gt;
+      &lt;td&gt;13&lt;/td&gt;
+      &lt;td&gt;52&lt;/td&gt;
+      &lt;td&gt;{56: 1, 8: 1, 2: 1}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;int&lt;/td&gt;
+      &lt;td&gt;13&lt;/td&gt;
+      &lt;td&gt;79&lt;/td&gt;
+      &lt;td&gt;{36: 2, 89: 1, 35: 1}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;5&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;x&lt;/td&gt;
+      &lt;td&gt;int&lt;/td&gt;
+      &lt;td&gt;20&lt;/td&gt;
+      &lt;td&gt;45&lt;/td&gt;
+      &lt;td&gt;{61: 1, 34: 2, 70: 1}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;6&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;int&lt;/td&gt;
+      &lt;td&gt;13&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+      &lt;td&gt;{30: 2, 66: 2, 35: 2}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;7&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;int&lt;/td&gt;
+      &lt;td&gt;13&lt;/td&gt;
+      &lt;td&gt;57&lt;/td&gt;
+      &lt;td&gt;{36: 1, 57: 1, 25: 1}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;8&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;int&lt;/td&gt;
+      &lt;td&gt;16&lt;/td&gt;
+      &lt;td&gt;79&lt;/td&gt;
+      &lt;td&gt;{97: 2, 82: 2, 15: 3}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;9&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;int&lt;/td&gt;
+      &lt;td&gt;14&lt;/td&gt;
+      &lt;td&gt;40&lt;/td&gt;
+      &lt;td&gt;{1: 1, 98: 1, 7: 1}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;Stacy&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;int&lt;/td&gt;
+      &lt;td&gt;17&lt;/td&gt;
+      &lt;td&gt;76&lt;/td&gt;
+      &lt;td&gt;{4: 2, 86: 2, 67: 1}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;11&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;Sandra&lt;/td&gt;
+      &lt;td&gt;y&lt;/td&gt;
+      &lt;td&gt;int&lt;/td&gt;
+      &lt;td&gt;15&lt;/td&gt;
+      &lt;td&gt;24&lt;/td&gt;
+      &lt;td&gt;{64: 1, 8: 1, 53: 2}&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
