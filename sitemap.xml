@@ -1,134 +1,17 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
   
   <url>
-    <loc>/authors/natbusa/</loc>
-    <lastmod>2019-12-27T12:40:38+08:00</lastmod>
-  </url>
-  
+    <loc></loc><changefreq>weekly</changefreq></url>
   <url>
-    <loc>/tags/analytics/</loc>
-    <lastmod>2019-12-27T12:40:38+08:00</lastmod>
-  </url>
-  
+    <loc></loc><changefreq>weekly</changefreq></url>
   <url>
-    <loc>/authors/</loc>
-    <lastmod>2019-12-27T12:40:38+08:00</lastmod>
-  </url>
-  
+    <loc>https://natbusa.github.io/categories/</loc><changefreq>weekly</changefreq></url>
   <url>
-    <loc>/categories/</loc>
-    <lastmod>2019-12-27T12:40:38+08:00</lastmod>
-  </url>
-  
+    <loc>https://natbusa.github.io/</loc><changefreq>weekly</changefreq></url>
   <url>
-    <loc>/categories/datafaucet/</loc>
-    <lastmod>2019-12-27T12:40:38+08:00</lastmod>
-  </url>
-  
+    <loc>https://natbusa.github.io/publication_types/</loc><changefreq>weekly</changefreq></url>
   <url>
-    <loc>/</loc>
-    <lastmod>2019-12-27T12:40:38+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/post/parquet-filters-pushdown/</loc>
-    <lastmod>2019-12-27T12:40:38+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/pyspark/</loc>
-    <lastmod>2019-12-27T12:40:38+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
-    <lastmod>2019-12-27T12:40:38+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/post/datafaucet-aggregate/</loc>
-    <lastmod>2019-12-27T11:17:12+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/pandas/</loc>
-    <lastmod>2019-12-27T11:17:12+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/architectures/</loc>
-    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/meetups/</loc>
-    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/streaming/</loc>
-    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/post/streaming-analytics/</loc>
-    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/post/ai-trip/</loc>
-    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/ventures/</loc>
-    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/data-science/</loc>
-    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/post/data-science-qa/</loc>
-    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/projects/</loc>
-    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/rewind/</loc>
-    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/post/rewind-2016/</loc>
-    <lastmod>2019-12-21T18:56:24+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/post/</loc>
-    <lastmod>2019-05-06T17:54:11+01:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/publication_types/</loc>
-  </url>
-  
-  <url>
-    <loc>/project/</loc>
-    <lastmod>2019-12-21T17:08:35+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/talk/</loc>
-    <lastmod>2019-05-06T17:54:11+01:00</lastmod>
-  </url>
-  
-</urlset>
+    <loc>https://natbusa.github.io/tags/</loc><changefreq>weekly</changefreq></url></urlset>

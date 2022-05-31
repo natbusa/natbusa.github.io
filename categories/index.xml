@@ -1,48 +1,16 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Categories | Natalino Busa</title>
-    <link>/categories/</link>
-      <atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <title>Categories | Nat Busa</title>
+    <link>https://natbusa.github.io/categories/</link>
+      <atom:link href="https://natbusa.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     <description>Categories</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>2019</copyright><lastBuildDate>Tue, 24 Dec 2019 00:00:00 +0000</lastBuildDate>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language>
     <image>
-      <url>/img/icon-192.png</url>
+      <url>https://natbusa.github.io/media/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_3.png</url>
       <title>Categories</title>
-      <link>/categories/</link>
+      <link>https://natbusa.github.io/categories/</link>
     </image>
-    
-    <item>
-      <title>datafaucet</title>
-      <link>/categories/datafaucet/</link>
-      <pubDate>Tue, 24 Dec 2019 00:00:00 +0000</pubDate>
-      <guid>/categories/datafaucet/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>architectures</title>
-      <link>/categories/architectures/</link>
-      <pubDate>Tue, 07 Feb 2017 16:28:27 +0800</pubDate>
-      <guid>/categories/architectures/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>meetups</title>
-      <link>/categories/meetups/</link>
-      <pubDate>Tue, 07 Feb 2017 16:28:27 +0800</pubDate>
-      <guid>/categories/meetups/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>rewind</title>
-      <link>/categories/rewind/</link>
-      <pubDate>Thu, 29 Dec 2016 00:00:00 +0000</pubDate>
-      <guid>/categories/rewind/</guid>
-      <description></description>
-    </item>
     
   </channel>
 </rss>

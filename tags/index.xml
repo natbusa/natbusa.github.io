@@ -1,72 +1,16 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags | Natalino Busa</title>
-    <link>/tags/</link>
-      <atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <title>Tags | Nat Busa</title>
+    <link>https://natbusa.github.io/tags/</link>
+      <atom:link href="https://natbusa.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <description>Tags</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>2019</copyright><lastBuildDate>Tue, 24 Dec 2019 00:00:00 +0000</lastBuildDate>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language>
     <image>
-      <url>/img/icon-192.png</url>
+      <url>https://natbusa.github.io/media/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_3.png</url>
       <title>Tags</title>
-      <link>/tags/</link>
+      <link>https://natbusa.github.io/tags/</link>
     </image>
-    
-    <item>
-      <title>analytics</title>
-      <link>/tags/analytics/</link>
-      <pubDate>Tue, 24 Dec 2019 00:00:00 +0000</pubDate>
-      <guid>/tags/analytics/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>pyspark</title>
-      <link>/tags/pyspark/</link>
-      <pubDate>Tue, 24 Dec 2019 00:00:00 +0000</pubDate>
-      <guid>/tags/pyspark/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>pandas</title>
-      <link>/tags/pandas/</link>
-      <pubDate>Mon, 11 Nov 2019 00:00:00 +0000</pubDate>
-      <guid>/tags/pandas/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>streaming</title>
-      <link>/tags/streaming/</link>
-      <pubDate>Tue, 07 Feb 2017 16:28:27 +0800</pubDate>
-      <guid>/tags/streaming/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>ventures</title>
-      <link>/tags/ventures/</link>
-      <pubDate>Tue, 07 Feb 2017 16:28:27 +0800</pubDate>
-      <guid>/tags/ventures/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>data science</title>
-      <link>/tags/data-science/</link>
-      <pubDate>Tue, 07 Feb 2017 00:00:00 +0000</pubDate>
-      <guid>/tags/data-science/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>projects</title>
-      <link>/tags/projects/</link>
-      <pubDate>Thu, 29 Dec 2016 00:00:00 +0000</pubDate>
-      <guid>/tags/projects/</guid>
-      <description></description>
-    </item>
     
   </channel>
 </rss>
